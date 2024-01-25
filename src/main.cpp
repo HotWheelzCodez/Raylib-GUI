@@ -1,6 +1,7 @@
 #include "../include/raylib.h"
 #include "../include/definitions.hpp"
 #include "../include/button.hpp"
+#include "../include/inputBox.hpp"
 
 int main(void)
 {
@@ -18,17 +19,38 @@ int main(void)
 		"Exit"
 	};
 
+	InputBoxStyle ibs_Test = {
+		CLEAR,
+		CLEAR,
+		BLUE,
+		DARKBLUE,
+		GRAY,
+		WHITE,
+		0.5f,
+		2,
+		false,
+		10,
+		"Input"
+	};
+
 	Button b_Exit((Rectangle){ WINDOW_WIDTH-30, 0, 30, 20 }, bs_Exit);
 
+	InputBox ib_Test((Rectangle){ 100, 100, 200, 20 }, ibs_Test);
+
 	while (!WindowShouldClose()) {
+		SetMouseCursor(MOUSE_CURSOR_DEFAULT);
 		BeginDrawing();
 			ClearBackground(BACKGROUND_COLOR);
+			DrawFPS(10, 10);
 
 			if (b_Exit.UpdateAndRender()) {
 				break;
 			}
 
-			DrawFPS(10, 10);
+			if (ib_Test.UpdateAndRender()) {
+
+			}
+
 		EndDrawing();
 	}
 
