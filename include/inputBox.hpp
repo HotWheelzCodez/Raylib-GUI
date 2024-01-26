@@ -2,6 +2,7 @@
 #define INPUT_BOX_HPP
 
 #include <string>
+#include <algorithm>
 #include "raylib.h"
 #include "definitions.hpp"
 
@@ -23,11 +24,14 @@ class InputBox {
 public:
 	InputBox(Rectangle bounds, InputBoxStyle style) : m_Bounds(bounds), m_Style(style) { }	
 
-	bool UpdateAndRender();
+	void UpdateAndRender();
+	std::string GetInput();
 
 private:
 	Rectangle     m_Bounds;
 	InputBoxStyle m_Style;
+
+	std::string GetClippedText();
 };
 
 #endif /* INPUT_BOX_HPP */

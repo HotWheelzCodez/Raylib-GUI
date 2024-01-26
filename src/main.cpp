@@ -1,3 +1,4 @@
+#include <vector>
 #include "../include/raylib.h"
 #include "../include/definitions.hpp"
 #include "../include/button.hpp"
@@ -19,6 +20,17 @@ int main(void)
 		"Exit"
 	};
 
+	ButtonStyle bs_Test = {
+		DARKBLUE,
+		BLUE,
+		WHITE,
+		WHITE,
+		0.5f,
+		10,
+		TEXT_ALIGNMENT_CENTER,
+		"Test"
+	};
+
 	InputBoxStyle ibs_Test = {
 		CLEAR,
 		CLEAR,
@@ -33,9 +45,9 @@ int main(void)
 		"Input"
 	};
 
-	Button b_Exit((Rectangle){ WINDOW_WIDTH-30, 0, 30, 20 }, bs_Exit);
+	Button b_Exit({ WINDOW_WIDTH-30, 0, 30, 20 }, bs_Exit);
 
-	InputBox ib_Test((Rectangle){ 100, 100, 200, 20 }, ibs_Test);
+	InputBox ib_Test({ 100, 100, 200, 20 }, ibs_Test);
 
 	while (!WindowShouldClose()) {
 		SetMouseCursor(MOUSE_CURSOR_DEFAULT);
@@ -46,10 +58,8 @@ int main(void)
 			if (b_Exit.UpdateAndRender()) {
 				break;
 			}
-
-			if (ib_Test.UpdateAndRender()) {
-
-			}
+	
+			ib_Test.UpdateAndRender();
 
 		EndDrawing();
 	}

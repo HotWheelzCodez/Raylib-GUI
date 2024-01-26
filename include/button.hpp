@@ -1,3 +1,6 @@
+#ifndef BUTTON_HPP
+#define BUTTON_HPP
+
 #include <string>
 #include "raylib.h"
 #include "definitions.hpp"
@@ -25,3 +28,5 @@ private:
 
 	void DrawButtonText(Color textColor);
 };
+
+#endif /* BUTTON_HPP */

@@ -2,31 +2,35 @@ cmake_minimum_required(VERSION 3.0)
 project(gui)
 set(CMAKE_CXX_STANDARD 11)
 
-# Adding Raylib
-include(FetchContent)
-set(FETCHCONTENT_QUIET FALSE)
-set(BUILD_EXAMPLES OFF CACHE BOOL "" FORCE) # don't build the supplied examples
-set(BUILD_GAMES    OFF CACHE BOOL "" FORCE) # don't build the supplied example games
+# Raylib
+set(RAYLIB_DIR "${CMAKE_CURRENT_LIST_DIR}/libs")
 
-FetchContent_Declare(
-  raylib
-  GIT_REPOSITORY "https://github.com/raysan5/raylib.git"
-  GIT_TAG "master"
-  GIT_PROGRESS TRUE
+# Specify the include directories
+include_directories("${CMAKE_CURRENT_LIST_DIR}/include")
+include_directories("${RAYLIB_DIR}/raylib/src")
+
+# Add the Raylib library
+add_library(raylib STATIC IMPORTED)
+set_target_properties(raylib PROPERTIES
+  IMPORTED_LOCATION "${RAYLIB_DIR}/libraylib.a"
 )
 
-FetchContent_MakeAvailable(raylib)
+# Adding source files
+file(GLOB_RECURSE PROJECT_SOURCES CONFIGURE_DEPENDS "${CMAKE_CURRENT_LIST_DIR}/src/*.cpp")
 
-# Adding our source files
-file(GLOB_RECURSE PROJECT_SOURCES CONFIGURE_DEPENDS "${CMAKE_CURRENT_LIST_DIR}/src/*.cpp") # Define PROJECT_SOURCES as a list of all source files
-set(PROJECT_INCLUDE "${CMAKE_CURRENT_LIST_DIR}/include/") # Define PROJECT_INCLUDE to be the path to the include directory of the project
+# Declare the executable
+add_executable(${PROJECT_NAME} ${PROJECT_SOURCES})
 
-# Declaring our executable
-add_executable(${PROJECT_NAME})
-target_sources(${PROJECT_NAME} PRIVATE ${PROJECT_SOURCES})
-target_include_directories(${PROJECT_NAME} PRIVATE ${PROJECT_INCLUDE})
+# Link the executable with Raylib
 target_link_libraries(${PROJECT_NAME} PRIVATE raylib)
 
-# Setting ASSETS_PATH
-#target_compile_definitions(${PROJECT_NAME} PUBLIC ASSETS_PATH="${CMAKE_CURRENT_SOURCE_DIR}/assets/") # Set the asset path macro to the absolute path on the dev machine
-#target_compile_definitions(${PROJECT_NAME} PUBLIC ASSETS_PATH="./assets") # Set the asset path macro in release mode to a relative path that assumes the assets folder is in the same directory as the game executable
+# Platform-specific settings
+if (WIN32)
+    target_link_libraries(${PROJECT_NAME} PRIVATE opengl32 gdi32)
+elseif (APPLE)
+    find_library(COCOA_LIBRARY Cocoa)
+    find_library(OPENGL_LIBRARY OpenGL)
+    find_library(IOKIT_LIBRARY IOKit)
+    find_library(COREVIDEO_LIBRARY CoreVideo)
+    target_link_libraries(${PROJECT_NAME} PRIVATE ${COCOA_LIBRARY} ${OPENGL_LIBRARY} ${IOKIT_LIBRARY} ${COREVIDEO_LIBRARY})
+endif ()
