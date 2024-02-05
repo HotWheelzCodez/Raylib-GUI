@@ -3,7 +3,7 @@
 
 #include <string>
 #include "raylib.h"
-#include "definitions.hpp"
+#include "gui.hpp"
 
 typedef struct ButtonStyle {
 	Color       baseBackgroundColor;
@@ -20,7 +20,7 @@ class Button {
 public:
 	Button(Rectangle bounds, ButtonStyle style) : m_Bounds(bounds), m_Style(style) { }
 
-	bool UpdateAndRender();
+	bool UpdateAndRender(Rectangle bounds);
 
 private:
 	Rectangle   m_Bounds;

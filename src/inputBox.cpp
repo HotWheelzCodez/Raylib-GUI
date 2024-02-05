@@ -2,7 +2,17 @@
 
 std::string InputBox::GetInput() { return m_Style.text; }
 
-/* NOTE: Find a more effiecent way then reversing the string at the end */
+int InputBox::FindLastIndexOf(char toFind)
+{
+	for (size_t i = m_Style.text.length()-1; i > 0; i--) {
+		if (m_Style.text[i] == toFind) {
+			return static_cast<int>(i);
+		}
+	}
+
+	return -1;
+}
+
 std::string InputBox::GetClippedText()
 {
 	std::string clippedText;
@@ -19,13 +29,20 @@ std::string InputBox::GetClippedText()
 	return clippedText;
 }
 
-void InputBox::UpdateAndRender()
+void InputBox::SetEditMode(bool editMode) { m_Style.editMode = editMode; }
+
+void InputBox::UpdateAndRender(Rectangle bounds)
 {
+	m_Bounds = bounds;
+
 	Color backgroundColor   = m_Style.baseBackgroundColor;
 	Color outlineColor      = m_Style.baseOutlineColor;
 	Color textColor         = m_Style.baseTextColor;
 
 	std::string displayText = m_Style.text;
+	if (m_Style.text.length() <= 0) {
+		displayText = m_Style.placeholder;
+	}
 
 	if (m_Style.editMode) {
 		backgroundColor = m_Style.hoverBackgroundColor;
@@ -34,27 +51,132 @@ void InputBox::UpdateAndRender()
 
 		int keyPressed = GetKeyPressed();
 
-		/* NOTE: Add shift-key functionality - and have it work with other characters like ,.:'/<>?[]{}()\|!@#$%%^&*()-_=+'" */
-		/* NOTE: Refactor to work using switch - check if the key is KEY_V then do the checks for ctrl and cmd then check the other things in the switch */
-		/* NOTE: Add backspace repeat */
-		if (IsKeyDown(KEY_LEFT_CONTROL) || IsKeyDown(KEY_LEFT_SUPER)) { /* KEY_LEFT_SUPER is the command key on mac */
-			if (keyPressed == KEY_V) {
-				/* NOTE: Update functionality to treat '\n' as ' ' */
-				const char* clipboardText = GetClipboardText();
-				m_Style.text += clipboardText;
-			}
-		} else if (keyPressed == KEY_BACKSPACE) {
-			if (m_Style.text.length() > 0)
-				m_Style.text.pop_back();
-		} else if (keyPressed == KEY_SPACE) {
-				m_Style.text += ' ';
-		} else if (keyPressed != KEY_NULL) { 
-			keyPressed += 32;
-			m_Style.text += static_cast<char>(keyPressed);
+		switch (keyPressed) {
+			case KEY_LEFT_CONTROL:
+				break;
+			case KEY_LEFT_SUPER:
+				break;
+			case KEY_V:
+				if (IsKeyDown(KEY_LEFT_CONTROL) || IsKeyDown(KEY_LEFT_SUPER)) { /* KEY_LEFT_SUPER is the command key for mac */
+					const char* clipboardText = GetClipboardText();
+					m_Style.text += clipboardText;
+					break;
+				}
+				m_Style.text += 'v';
+				break;
+			case KEY_SPACE:
+				m_Style.text += ' ' ;
+				break;
+			case KEY_LEFT_SHIFT:
+				break;
+			case KEY_BACKSPACE:
+				if (m_Style.text.length() > 0) {
+					if (IsKeyDown(KEY_LEFT_CONTROL) || IsKeyDown(KEY_LEFT_SUPER)) { /* KEY_LEFT_SUPER is the command key for mac */
+						int indexOfLastSpace = FindLastIndexOf(' ');
+						if (indexOfLastSpace != -1) {
+							m_Style.text = m_Style.text.substr(0, indexOfLastSpace);
+							break;
+						} else {
+							m_Style.text = "";
+							break;
+						}
+					}
+					m_Style.text.pop_back();
+				}
+				break;
+			case KEY_NULL:
+				break;
+			default:
+				if (keyPressed >= 65 && keyPressed <= 90) {
+					if (!IsKeyDown(KEY_LEFT_SHIFT)) {
+						keyPressed += 32;
+						m_Style.text += static_cast<char>(keyPressed);
+					} else {
+						m_Style.text += static_cast<char>(keyPressed);
+					}
+				} else if (keyPressed >= 48 && keyPressed <= 57) {
+					if (IsKeyDown(KEY_LEFT_SHIFT)) {
+						switch (keyPressed) {
+							case KEY_ONE: 
+								m_Style.text += '!';
+								break;
+							case KEY_TWO:
+								m_Style.text += '@';
+								break;
+							case KEY_THREE:
+								m_Style.text += '#';
+								break;
+							case KEY_FOUR:
+								m_Style.text += '$';
+								break;
+							case KEY_FIVE:
+								m_Style.text += '%';
+								break;
+							case KEY_SIX:
+								m_Style.text += '^';
+								break;
+							case KEY_SEVEN:
+								m_Style.text += '&';
+								break;
+							case KEY_EIGHT:
+								m_Style.text += '*';
+								break;
+							case KEY_NINE:
+								m_Style.text += '(';
+								break;
+							case KEY_ZERO:
+								m_Style.text += ')';
+								break;
+						}
+					} else {
+						m_Style.text += static_cast<char>(keyPressed);
+					}
+				} else {
+					if (IsKeyDown(KEY_LEFT_SHIFT)) {
+						switch (keyPressed) {
+							case KEY_MINUS:
+								keyPressed = 95;
+								break;
+							case KEY_EQUAL:
+								keyPressed = 43;
+								break;
+							case KEY_COMMA:
+								keyPressed = 60;
+								break;
+							case KEY_PERIOD:
+								keyPressed = 62;
+								break;
+							case KEY_SLASH:
+								keyPressed = 63;
+								break;
+							case KEY_SEMICOLON:
+								keyPressed = 58;
+								break;
+							case KEY_APOSTROPHE:
+								keyPressed = 34;
+								break;
+							case KEY_BACKSLASH:
+								keyPressed = 124;
+								break;
+							case KEY_LEFT_BRACKET:
+								keyPressed = 123;
+								break;
+							case KEY_RIGHT_BRACKET:
+								keyPressed = 125;
+								break;
+							case KEY_GRAVE:
+								keyPressed = 126;
+								break;
+						}
+					}
+					m_Style.text += static_cast<char>(keyPressed);
+				}
 		}
 
 		if (MeasureText(m_Style.text.c_str(), m_Style.fontSize)+OFFSET_TEXT > m_Bounds.width-OFFSET_TEXT) {
 			displayText = GetClippedText();
+		} else {
+			displayText = m_Style.text;
 		}
 
 		DrawRectangleRec({ m_Bounds.x+OFFSET_TEXT+MeasureText(displayText.c_str(), m_Style.fontSize)+OFFSET_CURSOR, m_Bounds.y+OFFSET_CURSOR, 2,
@@ -87,4 +209,7 @@ void InputBox::UpdateAndRender()
 	DrawRectangleRounded({ m_Bounds.x+m_Style.outlineThickness, m_Bounds.y+m_Style.outlineThickness, m_Bounds.height-m_Style.outlineThickness,
 		m_Bounds.width-m_Style.outlineThickness }, m_Style.roundness, 100, backgroundColor);
 	DrawText(displayText.c_str(), m_Bounds.x+5, m_Bounds.y+(static_cast<int>(m_Bounds.height)>>1)-(m_Style.fontSize>>1), m_Style.fontSize, textColor);
+
+	DrawText(m_Style.title.c_str(), m_Bounds.x-MeasureText(m_Style.title.c_str(), m_Style.fontSize)-OFFSET_TEXT, 
+		m_Bounds.y+(static_cast<int>(m_Bounds.height)>>1)-static_cast<float>(m_Style.fontSize>>1), m_Style.fontSize, m_Style.hoverTextColor);	
 }

@@ -7,7 +7,6 @@ set(RAYLIB_DIR "${CMAKE_CURRENT_LIST_DIR}/libs")
 
 # Specify the include directories
 include_directories("${CMAKE_CURRENT_LIST_DIR}/include")
-include_directories("${RAYLIB_DIR}/raylib/src")
 
 # Add the Raylib library
 add_library(raylib STATIC IMPORTED)

@@ -1,12 +1,16 @@
-#include <vector>
 #include "../include/raylib.h"
-#include "../include/definitions.hpp"
+#include "../include/gui.hpp"
 #include "../include/button.hpp"
 #include "../include/inputBox.hpp"
+#include "../include/scrollArea.hpp"
 
 int main(void)
 {
-	InitWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "Raylib GUI");
+	int windowWidth  = 1000;
+	int windowHeight = 800;
+
+	InitWindow(windowWidth, windowHeight, "Raylib GUI");
+	SetWindowState(FLAG_WINDOW_RESIZABLE);
 	SetTargetFPS(60);
 
 	ButtonStyle bs_Exit = {
@@ -20,17 +24,6 @@ int main(void)
 		"Exit"
 	};
 
-	ButtonStyle bs_Test = {
-		DARKBLUE,
-		BLUE,
-		WHITE,
-		WHITE,
-		0.5f,
-		10,
-		TEXT_ALIGNMENT_CENTER,
-		"Test"
-	};
-
 	InputBoxStyle ibs_Test = {
 		CLEAR,
 		CLEAR,
@@ -42,25 +35,31 @@ int main(void)
 		2,
 		false,
 		10,
-		"Input"
+		"Username: ",
+		"Your username...",
+		""
 	};
 
-	Button b_Exit({ WINDOW_WIDTH-30, 0, 30, 20 }, bs_Exit);
+	Button b_Exit({ static_cast<float>(windowWidth)-30, 0, 30, 20 }, bs_Exit);
 
-	InputBox ib_Test({ 100, 100, 200, 20 }, ibs_Test);
+	InputBox ib_Test({ static_cast<float>(windowWidth>>1)-100, static_cast<float>(windowHeight>>1)-10, 200, 20 }, ibs_Test);
 
 	while (!WindowShouldClose()) {
 		SetMouseCursor(MOUSE_CURSOR_DEFAULT);
+		windowWidth  = GetScreenWidth();
+		windowHeight = GetScreenHeight();
 		BeginDrawing();
 			ClearBackground(BACKGROUND_COLOR);
-			DrawFPS(10, 10);
 
-			if (b_Exit.UpdateAndRender()) {
+			if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
+				ib_Test.SetEditMode(false);
+			}
+
+			if (b_Exit.UpdateAndRender({ static_cast<float>(windowWidth)-30, 0, 30, 20 })) {
 				break;
 			}
-	
-			ib_Test.UpdateAndRender();
 
+			ib_Test.UpdateAndRender({ static_cast<float>(windowWidth>>1)-100, static_cast<float>(windowHeight>>1)-10, 200, 20 });
 		EndDrawing();
 	}
 

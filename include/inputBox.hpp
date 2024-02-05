@@ -4,7 +4,7 @@
 #include <string>
 #include <algorithm>
 #include "raylib.h"
-#include "definitions.hpp"
+#include "gui.hpp"
 
 typedef struct InputBoxStyle {
 	Color 			baseBackgroundColor;
@@ -17,6 +17,8 @@ typedef struct InputBoxStyle {
 	float       outlineThickness;
 	bool        editMode;
 	int   			fontSize;
+	std::string title;
+	std::string placeholder;
 	std::string text;
 } InputBoxStyle;
 
@@ -24,14 +26,16 @@ class InputBox {
 public:
 	InputBox(Rectangle bounds, InputBoxStyle style) : m_Bounds(bounds), m_Style(style) { }	
 
-	void UpdateAndRender();
-	std::string GetInput();
+	void UpdateAndRender(Rectangle bounds);
+	void SetEditMode(bool editMode);
+	std::string GetInput(void);
 
 private:
 	Rectangle     m_Bounds;
 	InputBoxStyle m_Style;
 
-	std::string GetClippedText();
+	int FindLastIndexOf(char toFind);
+	std::string GetClippedText(void);
 };
 
 #endif /* INPUT_BOX_HPP */

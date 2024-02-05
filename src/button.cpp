@@ -17,12 +17,16 @@ void Button::DrawButtonText(Color textColor)
 	}
 }
 
-bool Button::UpdateAndRender()
+bool Button::UpdateAndRender(Rectangle bounds)
 {
+	m_Bounds = bounds;
+
 	Color backgroundColor = m_Style.baseBackgroundColor;
 	Color textColor       = m_Style.baseTextColor;
 
 	if (CheckCollisionPointRec(GetMousePosition(), m_Bounds)) {
+		SetMouseCursor(MOUSE_CURSOR_POINTING_HAND);
+
 		backgroundColor = m_Style.hoverBackgroundColor;
 		textColor       = m_Style.hoverTextColor;
 
