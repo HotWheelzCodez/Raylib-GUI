@@ -3,8 +3,8 @@
 
 #include "raylib.h"
 
-#define CLEAR      			 (Color){ 0, 0, 0, 0 }
-#define BACKGROUND_COLOR (Color){ 25, 25, 30 }
+#define TRANSPARENT (Color){ 0, 0, 0, 0 }
+#define CLEAR       TRANSPARENT
 
 #define WINDOW_WIDTH  1000
 #define WINDOW_HEIGHT 800
@@ -19,5 +19,7 @@
 
 #define OFFSET_TEXT   5
 #define OFFSET_CURSOR 3
+
+#define SEGMENTS 10
 
 #endif /* GUI_HPP */

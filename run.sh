@@ -1,4 +1,6 @@
+mkdir build
 cd build
-make
+cmake ..
+make 
 ./gui
 cd ..

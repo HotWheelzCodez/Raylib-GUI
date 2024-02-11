@@ -5,7 +5,8 @@
 #include "raylib.h"
 #include "gui.hpp"
 
-typedef struct ButtonStyle {
+typedef struct ButtonStyle 
+{
 	Color       baseBackgroundColor;
 	Color       hoverBackgroundColor;
 	Color       baseTextColor;
@@ -16,17 +17,18 @@ typedef struct ButtonStyle {
 	std::string text;
 } ButtonStyle;
 
-class Button {
+class Button 
+{
 public:
-	Button(Rectangle bounds, ButtonStyle style) : m_Bounds(bounds), m_Style(style) { }
+	Button(Rectangle bounds, ButtonStyle style);
 
-	bool UpdateAndRender(Rectangle bounds);
+	bool updateAndRender(Rectangle bounds);
 
 private:
 	Rectangle   m_Bounds;
 	ButtonStyle m_Style;
 
-	void DrawButtonText(Color textColor);
+	void drawButtonText(Color textColor);
 };
 
 #endif /* BUTTON_HPP */
