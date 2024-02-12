@@ -3,23 +3,22 @@
 
 #include "raylib.h"
 
+// Custom colors
+// --------------------------------------------
 #define TRANSPARENT (Color){ 0, 0, 0, 0 }
 #define CLEAR       TRANSPARENT
 
-#define WINDOW_WIDTH  1000
-#define WINDOW_HEIGHT 800
-
+// Text alignment modes
+// ---------------------------------
 #define TEXT_ALIGNMENT_LEFT   0
 #define TEXT_ALIGNMENT_CENTER 1
 #define TEXT_ALIGNMENT_RIGHT  2
 
-#define ITEM_ALIGNMENT_LEFT   0
-#define ITEM_ALIGNMENT_CENTER 1
-#define ITEM_ALIGNMENT_RIGHT  2
-
+// Offset types
+// -------------------------
 #define OFFSET_TEXT   5
 #define OFFSET_CURSOR 3
 
-#define SEGMENTS 10
+#define SEGMENTS 10 // Used when rounding something
 
 #endif /* GUI_HPP */

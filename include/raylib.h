@@ -680,7 +680,12 @@ typedef enum {
     KEY_BACK            = 4,        // Key: Android back button
     KEY_MENU            = 82,       // Key: Android menu button
     KEY_VOLUME_UP       = 24,       // Key: Android volume up button
-    KEY_VOLUME_DOWN     = 25        // Key: Android volume down button
+    KEY_VOLUME_DOWN     = 25,       // Key: Android volume down button
+    // Custom arrow keys 
+    KEY_ARROW_RIGHT     = 262,      // Key: Arrow key right
+    KEY_ARROW_LEFT      = 263,      // Key: Arrow key left
+    KEY_ARROW_DOWN      = 264,      // Key: Arrow key down
+    KEY_ARROW_UP        = 265       // Key: Arrow key up
 } KeyboardKey;
 
 // Add backwards compatibility support for deprecated names

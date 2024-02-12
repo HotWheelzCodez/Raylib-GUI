@@ -5,6 +5,8 @@
 #include "raylib.h"
 #include "gui.hpp"
 
+// Style structure
+// -------------------------------------
 typedef struct ButtonStyle 
 {
 	Color       baseBackgroundColor;
@@ -17,17 +19,25 @@ typedef struct ButtonStyle
 	std::string text;
 } ButtonStyle;
 
+// Button class
+// ------------------------------------------------
 class Button 
 {
 public:
 	Button(Rectangle bounds, ButtonStyle style);
 
-	bool updateAndRender(Rectangle bounds);
+  // Main methods
+  // ----------------------------------------
+	bool updateAndRender(void);
 
 private:
+  // Member variables
+  // -------------------
 	Rectangle   m_Bounds;
 	ButtonStyle m_Style;
 
+  // Member methods
+  // -------------------------------------
 	void drawButtonText(Color textColor);
 };
 
