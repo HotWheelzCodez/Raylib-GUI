@@ -20,6 +20,7 @@ typedef struct TextBoxStyle
   bool        editMode;
   int         textAlignment;
   int         fontSize;
+  int         cursorWidth;
 } TextBoxStyle;
 
 // Text box class

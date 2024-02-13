@@ -1,4 +1,5 @@
 #include "../include/textBox.hpp"
+#include <algorithm>
 #include <iostream>
 
 TextBox::TextBox(Rectangle bounds, TextBoxStyle style)
@@ -37,6 +38,11 @@ void TextBox::updateAndRender(void)
       m_Style.editMode = !m_Style.editMode;
   }
 
+  // Draw the outline and the inner box
+  DrawRectangleRoundedLines(m_Bounds, m_Style.roundness, SEGMENTS, m_Style.outlineThickness, outlineColor);
+  DrawRectangleRounded({ m_Bounds.x+OFFSET_TEXT, m_Bounds.y+OFFSET_TEXT, m_Bounds.width-(OFFSET_TEXT<<1), m_Bounds.height-(OFFSET_TEXT<<1) },
+    m_Style.roundness, SEGMENTS, m_Style.backgroundColor);
+
   // If the user is editing the text box
   if (m_Style.editMode) 
   {
@@ -55,7 +61,10 @@ void TextBox::updateAndRender(void)
         m_Text += ' ';
       } else if (keyPressed == KEY_BACKSPACE)
       {
-        m_Text.pop_back();
+        if (m_Text[m_Text.length()-1] == '\n')
+          m_Text = m_Text.substr(0, m_Text.length()-2);
+        else 
+          m_Text.pop_back();
       } else 
       {
         m_Text += static_cast<char>(keyPressed+32);
@@ -74,12 +83,35 @@ void TextBox::updateAndRender(void)
 
     if (MeasureText(line.c_str(), m_Style.fontSize) >= m_Bounds.width-OFFSET_TEXT-(OFFSET_TEXT<<1)-m_Style.fontSize)
       m_Text += '\n';
-  }
 
-  // Draw the outline and the inner box
-  DrawRectangleRoundedLines(m_Bounds, m_Style.roundness, SEGMENTS, m_Style.outlineThickness, outlineColor);
-  DrawRectangleRounded((Rectangle){ m_Bounds.x+OFFSET_TEXT, m_Bounds.y+OFFSET_TEXT, m_Bounds.width-(OFFSET_TEXT<<1), m_Bounds.height-(OFFSET_TEXT<<1) },
-    m_Style.roundness, SEGMENTS, m_Style.backgroundColor);
+    // Draw the cursor
+    int height = 0;
+    int width  = 0; 
+
+    if (m_Text.length())
+    {
+      for (size_t i = 0; i < m_Text.length()-1; i++)
+      {
+        if (m_Text[i] == '\n')
+          height++;
+      }
+      height *= m_Style.fontSize + (m_Style.fontSize>>1);
+
+      line = "";
+      for (size_t i = m_Text.length()-1; i >= 0; i--) 
+      {
+        if (m_Text[i] == '\n')
+          break;
+  
+        line += m_Text[i];
+      }
+
+      width = MeasureText(line.c_str(), m_Style.fontSize);
+    }
+    
+    DrawRectangleRounded({ m_Bounds.x+(OFFSET_TEXT<<1)+width, m_Bounds.y+OFFSET_TEXT+m_Style.fontSize+height-(m_Style.fontSize>>1),
+      static_cast<float>(m_Style.cursorWidth), static_cast<float>(m_Style.fontSize<<1) }, m_Style.roundness, SEGMENTS, textColor);
+  }
 
   // Draw the text based off of the text alignment type
   switch (m_Style.textAlignment) 
@@ -92,4 +124,6 @@ void TextBox::updateAndRender(void)
     case TEXT_ALIGNMENT_RIGHT:
       break;
   }
+
+  
 }

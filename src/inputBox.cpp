@@ -265,7 +265,7 @@ bool InputBox::updateAndRender(void)
     {
       // Draw the outline, inner box, and the text
 			DrawRectangleRoundedLines(m_Bounds, m_Style.roundness, SEGMENTS, m_Style.outlineThickness, outlineColor);
-			DrawRectangleRounded((Rectangle){ m_Bounds.x+m_Style.outlineThickness, m_Bounds.y+m_Style.outlineThickness, m_Bounds.height-m_Style.outlineThickness,
+			DrawRectangleRounded({ m_Bounds.x+m_Style.outlineThickness, m_Bounds.y+m_Style.outlineThickness, m_Bounds.height-m_Style.outlineThickness,
 				m_Bounds.width-m_Style.outlineThickness }, m_Style.roundness, SEGMENTS, backgroundColor);
 			DrawText(displayText.c_str(), m_Bounds.x+OFFSET_TEXT, m_Bounds.y+(static_cast<int>(m_Bounds.height)>>1)-(m_Style.fontSize>>1), m_Style.fontSize, textColor);
 
@@ -275,7 +275,7 @@ bool InputBox::updateAndRender(void)
 
   // Draw the outline, inner box, and the text
 	DrawRectangleRoundedLines(m_Bounds, m_Style.roundness, SEGMENTS, m_Style.outlineThickness, outlineColor);
-	DrawRectangleRounded((Rectangle){ m_Bounds.x+m_Style.outlineThickness, m_Bounds.y+m_Style.outlineThickness, m_Bounds.height-m_Style.outlineThickness,
+	DrawRectangleRounded({ m_Bounds.x+m_Style.outlineThickness, m_Bounds.y+m_Style.outlineThickness, m_Bounds.height-m_Style.outlineThickness,
 		m_Bounds.width-m_Style.outlineThickness }, m_Style.roundness, SEGMENTS, backgroundColor);
 	DrawText(displayText.c_str(), m_Bounds.x+OFFSET_TEXT, m_Bounds.y+(static_cast<int>(m_Bounds.height)>>1)-(m_Style.fontSize>>1), m_Style.fontSize, textColor);
 
