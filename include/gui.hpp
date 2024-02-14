@@ -5,7 +5,7 @@
 
 // Custom colors
 // --------------------------------------------
-#define TRANSPARENT (Color){ 0, 0, 0, 0 }
+#define TRANSPARENT { 0, 0, 0, 0 }
 #define CLEAR       TRANSPARENT
 
 // Text alignment modes
