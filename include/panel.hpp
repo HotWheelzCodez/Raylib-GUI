@@ -27,19 +27,19 @@ public:
 
   // Main methods
   // ------------------------------
-  void updateAndRender();
-  void resize(Rectangle bounds);
+  void updateAndRender(void);    // Will display the panel, title area and title text
+  void resize(Rectangle bounds); // Will set the bounds of the panel to the given bounds
 
   // Getter methods
   // ---------------------------
-  Rectangle getBounds(void);
+  Rectangle getBounds(void); // Will return the Rectangle bounds of the panel
 
   // Setter methods
   // ---------------------------
-  void setWidth(int width);
-  void setHeight(int height);
-  void setXPos(int x);
-  void setYPos(int y);
+  void setWidth(int width);   // Will set the width of the bounds
+  void setHeight(int height); // Will set the height of the bounds
+  void setXPos(int x);        // Will set the x-position of the bounds
+  void setYPos(int y);        // Will set the y-position of the bounds
 
 private:
   // Member variables

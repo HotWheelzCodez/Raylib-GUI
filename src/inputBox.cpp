@@ -113,7 +113,7 @@ void InputBox::handleSpecialCharacters(int keyPressed)
       m_Text += '>' ;
 			break;
 		case KEY_SLASH:
-      m_Text += '>';
+      m_Text += '?';
 			break;
 		case KEY_SEMICOLON:
       m_Text += ':';
@@ -147,7 +147,7 @@ void InputBox::handleKeyPress(int keyPressed)
 			break;
 		case KEY_V:
       // Check to see if control or command is held down, if so get the clipbard text and add the to the text
-			if (IsKeyDown(KEY_LEFT_CONTROL) || IsKeyDown(KEY_LEFT_SUPER)) /* NOTE: KEY_LEFT_SUPER is the command key for mac */
+			if (IsKeyDown(KEY_LEFT_CONTROL || KEY_LEFT_SUPER)) /* NOTE: KEY_LEFT_SUPER is the command key for mac */
       { 
         m_Text += GetClipboardText();
 				break;
@@ -161,10 +161,10 @@ void InputBox::handleKeyPress(int keyPressed)
 		case KEY_LEFT_SHIFT: // Ignore if just left-shift is pressed
 			break;
 		case KEY_BACKSPACE:
-			if (m_Text.length() > 0) 
+			if (m_Text.length()) 
       {
         // Check to see if the user wants to delete a word
-				if (IsKeyDown(KEY_LEFT_CONTROL) || IsKeyDown(KEY_LEFT_SUPER)) /* NOTE: KEY_LEFT_SUPER is the command key for mac */
+				if (IsKeyDown(KEY_LEFT_CONTROL || KEY_LEFT_SUPER)) /* NOTE: KEY_LEFT_SUPER is the command key for mac */
         { 
           // Remove the last word of the text
 					int indexOfLastSpace = findLastIndexOf(' ');
@@ -172,17 +172,15 @@ void InputBox::handleKeyPress(int keyPressed)
           {
 						m_Text = m_Text.substr(0, indexOfLastSpace);
 						break;
-					} else 
-          {
-						m_Text = "";
-						break;
 					}
+					m_Text = "";
+					break;
 				}
         // Else just delete the last character
 				m_Text.pop_back();
 			}
 			break;
-		default: // If there are no special character or things to handle then check regular keys and casses
+		default: // If there are no 'special operations' or things to handle then check regular keys and casses
       // Normal character i.e not a number or something
 			if (keyPressed >= 65 && keyPressed <= 90) // Normal character
       {
@@ -190,29 +188,26 @@ void InputBox::handleKeyPress(int keyPressed)
         {
 					keyPressed += 32; // Lowercase the key by shifting the ascii value
 					m_Text += static_cast<char>(keyPressed);
-				} else 
-        {
-					m_Text += static_cast<char>(keyPressed);
-				}
+          break;
+				} 
+				m_Text += static_cast<char>(keyPressed);
 			} else if (keyPressed >= 48 && keyPressed <= 57) // Number character
       {
 				if (IsKeyDown(KEY_LEFT_SHIFT)) 
         {
           handleSpecialNumberKeys(keyPressed); // Add the corresponding special character keys for the numbers
-				} else 
-        {
-					m_Text += static_cast<char>(keyPressed);
-				}
+          break;
+				} 
+				m_Text += static_cast<char>(keyPressed);
 			} else 
       {
         // Cases for all of the special characters
 				if (IsKeyDown(KEY_LEFT_SHIFT)) 
         {
           handleSpecialCharacters(keyPressed);
-				} else
-        {
-			    m_Text += static_cast<char>(keyPressed);
-        }
+          break;
+				} 
+			  m_Text += static_cast<char>(keyPressed);
 	  }
 	}
 }

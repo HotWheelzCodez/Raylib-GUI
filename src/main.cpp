@@ -9,8 +9,8 @@
 
 int main(void)
 {
-	float windowWidth  = 1000.0;
-	float windowHeight = 800.0;
+	int windowWidth  = 800;
+	int windowHeight = 600;
 
 	InitWindow(windowWidth, windowHeight, "Raylib GUI");
 	SetWindowState(FLAG_WINDOW_RESIZABLE);
@@ -27,30 +27,30 @@ int main(void)
 		"Exit"
 	};
 
-  InputBoxStyle ibs_Test = {
+  InputBoxStyle ibs_Input = {
     CLEAR,
     CLEAR,
-    BLUE,
     DARKBLUE,
+    BLUE,
     GRAY,
     WHITE,
     0.5f,
-    0.5f,
+    0.2f,
     false,
     10,
     1,
     "Input: ",
-    "Input...",
+    "Input..."
   };
 
-  TextBoxStyle tbs_Test = {
-    DARKGRAY,
+  TextBoxStyle tbs_Output = {
+    GRAY,
     DARKBLUE,
     BLUE,
-    WHITE,
+    GRAY,
     WHITE,
     0.2f,
-    0.1f,
+    0.5f,
     false,
     TEXT_ALIGNMENT_LEFT,
     10,
@@ -59,9 +59,7 @@ int main(void)
 
 	Button b_Exit({ static_cast<float>(windowWidth)-30, 0, 30, 20 }, bs_Exit);
 
-  InputBox ib_Test({ 100, 100, 200, 20 }, ibs_Test);
-
-  TextBox tb_Test({ 200, 200, 500, 300 }, tbs_Test);
+  InputBox ib_Input({ static_cast<float>(windowWidth>>1)-100, (static_cast<float>(windowHeight)/10)-10, 200, 20 }, ibs_Input);
 
 	while (!WindowShouldClose()) {
 		SetMouseCursor(MOUSE_CURSOR_DEFAULT);
@@ -70,8 +68,7 @@ int main(void)
 		BeginDrawing();
 			ClearBackground(BACKGROUND_COLOR);
 
-      ib_Test.updateAndRender();
-      tb_Test.updateAndRender();
+      ib_Input.updateAndRender();
 
       if (b_Exit.updateAndRender()) {
 				break;

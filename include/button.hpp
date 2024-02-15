@@ -28,7 +28,7 @@ public:
 
   // Main methods
   // ----------------------------------------
-	bool updateAndRender(void);
+	bool updateAndRender(void); // Will display the button and return true or false if the button is clicked or not
 
 private:
   // Member variables
@@ -38,7 +38,7 @@ private:
 
   // Member methods
   // -------------------------------------
-	void drawButtonText(Color textColor);
+	void drawButtonText(Color textColor); // Will draw the text for the button based off of the text alignment
 };
 
 #endif /* BUTTON_HPP */
