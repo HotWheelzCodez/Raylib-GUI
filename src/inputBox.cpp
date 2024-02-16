@@ -3,8 +3,8 @@
 InputBox::InputBox(Rectangle bounds, InputBoxStyle style)
   : m_Bounds(bounds), m_Style(style) { }
 
-// Getter methods
-// ------------------------------------------------------
+void InputBox::resize(Rectangle bounds) { m_Bounds = bounds; }
+
 std::string InputBox::getInput() { return m_Text; }
 Rectangle InputBox::getBounds() { return m_Bounds; }
 

@@ -3,6 +3,8 @@
 Button::Button(Rectangle bounds, ButtonStyle style)
   : m_Bounds(bounds), m_Style(style) { }
 
+void Button::resize(Rectangle bounds) { m_Bounds = bounds; }
+
 void Button::drawButtonText(Color textColor)
 {
   // Draw the text based off of the text alignment

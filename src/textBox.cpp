@@ -3,6 +3,8 @@
 TextBox::TextBox(Rectangle bounds, TextBoxStyle style)
   : m_Bounds(bounds), m_Style(style) { }
 
+void TextBox::resize(Rectangle bounds) { m_Bounds = bounds; }
+
 void TextBox::setText(std::string text) 
 {
   m_Text = text;
@@ -10,12 +12,12 @@ void TextBox::setText(std::string text)
 
   for (size_t i = 0; i < m_Text.length(); i++)
   {
+    temp += m_Text[i];
     if (MeasureText(temp.c_str(), m_Style.fontSize) >= m_Bounds.width-OFFSET_TEXT-(OFFSET_TEXT<<1)-m_Style.fontSize)
     {
       m_Text.insert(i, "\n");
       temp = "";
     }
-    temp += m_Text[i];
   }
 }
 
@@ -31,37 +33,6 @@ int TextBox::findLastIndexOf(char toFind)
 
 std::string TextBox::getClippedText(void)
 {
-  std::string clippedText;
-  std::vector<std::string> lines;
-  std::string line;
-
-  for (size_t i = 0; i < m_Text.length(); i++)
-  {
-    if (m_Text[i] == '\n')    
-    {
-      lines.push_back(line);
-      line = "";
-    }
-
-    line += m_Text[i];
-  }
-  lines.push_back(line);
-
-  if (lines.size()*m_Style.fontSize >= static_cast<int>(m_Bounds.height)>>1)
-  {
-    for (int i = 0; i < lines.size(); i++)
-    {
-      if ((lines.size()-i)*m_Style.fontSize <= static_cast<int>(m_Bounds.height)>>1)
-      {
-        for (int j = i; j < lines.size()+1; j++)
-        {
-          clippedText += lines[j];
-        }
-        return clippedText;
-      }
-    }
-  }
-
   return m_Text;
 }
 

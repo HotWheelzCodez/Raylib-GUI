@@ -28,7 +28,8 @@ public:
 
   // Main methods
   // ----------------------------------------
-	bool updateAndRender(void); // Will display the button and return true or false if the button is clicked or not
+	bool updateAndRender(void);    // Will display the button and return true or false if the button is clicked or not
+  void resize(Rectangle bounds); // Will set the bounds of the button to the new bounds
 
 private:
   // Member variables

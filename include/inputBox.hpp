@@ -33,7 +33,8 @@ public:
 
   // Main methods
   // -----------------------------------------
-	bool updateAndRender(void); // Get the input, draw the box and input text, return true if the user hit enter, else false
+	bool updateAndRender(void);    // Get the input, draw the box and input text, return true if the user hit enter, else false
+  void resize(Rectangle bounds); // Set the bounds of the input box to the given bounds
 
   // Setter methods
   // -------------------------------------

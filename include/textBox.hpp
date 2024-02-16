@@ -33,7 +33,8 @@ public:
 
   // Main methods
   // ----------------------------------
-  void updateAndRender(void); // Will draw the text box, get user input, and draw the text
+  void updateAndRender(void);    // Will draw the text box, get user input, and draw the text
+  void resize(Rectangle bounds); // Will set the bounds of the text box to the given bounds;
 
   // Getter methods
   // -------------------------------
