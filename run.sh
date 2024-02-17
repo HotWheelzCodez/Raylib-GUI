@@ -2,11 +2,13 @@ echo -n "Do you allow this program to Fetch Raylib content from github to proper
 read choice
 
 if [ "$choice" = "Y" ]; then
+  echo -n "What do you want to name the project: "
+  read name
   mkdir build
   cd build
-  cmake -DPROJECT_NAME=gui ..
+  cmake -DPROJECT_NAME=$name ..
   make
-  ./gui
+  ./$name
   cd ..
 else
   echo "The project will not build then!"

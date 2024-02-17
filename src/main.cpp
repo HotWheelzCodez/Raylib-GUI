@@ -27,16 +27,11 @@ int main(void)
 		"Exit"
 	};
 
-  ButtonStyle bs_Submit = {
-    BLUE,
-    DARKBLUE,
-    BACKGROUND_COLOR,
-    WHITE,
-    0.5f,
-    10,
-    TEXT_ALIGNMENT_CENTER,
-    "Submit"
-  };
+  ButtonStyle bs_Submit = bs_Exit;
+  bs_Submit.baseBackgroundColor = BLUE;
+  bs_Submit.hoverBackgroundColor = DARKBLUE;
+  bs_Submit.baseTextColor = BACKGROUND_COLOR;
+  bs_Submit.text = "Submit";
 
   InputBoxStyle ibs_Input = {
     BACKGROUND_COLOR,
@@ -48,7 +43,7 @@ int main(void)
     0.5f,
     0.2f,
     false,
-    10,
+    20,
     1,
     "Input: ",
     "Input..."
@@ -64,7 +59,7 @@ int main(void)
     0.25f,
     false,
     TEXT_ALIGNMENT_LEFT,
-    10,
+    20,
     1
   };
 
@@ -88,9 +83,8 @@ int main(void)
       if (b_Submit.updateAndRender())
       {
         std::string text = ib_Input.getInput();
-        std::string output = "";
-        output += text[text.length()-1];
-        tb_Output.setText(output);
+        if (text.length())
+          tb_Output.setText(text[text.length()-1]);
       }
 
       if (b_Exit.updateAndRender()) {

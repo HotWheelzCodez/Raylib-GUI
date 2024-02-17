@@ -24,7 +24,6 @@ std::string InputBox::getClippedText(void)
 {
 	std::string clippedText;
 
-  // Get the most recent text that is within the bounds of the input box
 	for (size_t i = m_Text.length()-1; i > 0; i--) 
   {
 		if (MeasureText(clippedText.c_str(), m_Style.fontSize)+OFFSET_TEXT < m_Bounds.width-OFFSET_TEXT-OFFSET_CURSOR) 
@@ -33,7 +32,6 @@ std::string InputBox::getClippedText(void)
 			break;
 	}
 
-  // Reverse and return the text
 	std::reverse(clippedText.begin(), clippedText.end());
 	return clippedText;
 }
@@ -42,24 +40,23 @@ void InputBox::handleArrowKeys(int keyPressed)
 {
   switch (keyPressed)
   {
-    case KEY_ARROW_RIGHT: // Right arrow key
+    case KEY_ARROW_RIGHT: 
       if (m_CursorPosition < m_Text.length())
         m_CursorPosition++;
       break;
-    case KEY_ARROW_LEFT: // Left arrow key
+    case KEY_ARROW_LEFT: 
       if (m_CursorPosition > 0)
         m_CursorPosition--;
       break;
-    case KEY_ARROW_DOWN: // Down arrow key
-      break;  // Down is unapplicable for input-box
-    case KEY_ARROW_UP: // Up arrow key
-      break;  // Up is unapplicable for input-box
+    case KEY_ARROW_DOWN: 
+      break;  
+    case KEY_ARROW_UP: 
+      break;  
   }
 }
 
 void InputBox::handleSpecialNumberKeys(int keyPressed)
 {
-  // Add the special character of the corresponding number character this only runs when the user is typing a number character and is holding down the shift-key
   switch (keyPressed) 
   {
 	  case KEY_ONE: 
@@ -97,7 +94,6 @@ void InputBox::handleSpecialNumberKeys(int keyPressed)
 
 void InputBox::handleSpecialCharacters(int keyPressed)
 {
-  // This only gets ran when the shift-key is being held down, thus these are the 'caps' versions of the keys
   switch (keyPressed) 
   {
 		case KEY_MINUS:
@@ -140,33 +136,27 @@ void InputBox::handleKeyPress(int keyPressed)
 {
   switch (keyPressed) 
   {
-    // Don't do anything if control or command is pressed
 		case KEY_LEFT_CONTROL:
 			break;
 		case KEY_LEFT_SUPER: /* NOTE: KEY_LEFT_SUPER is the command key for mac */
 			break;
 		case KEY_V:
-      // Check to see if control or command is held down, if so get the clipbard text and add the to the text
 			if (IsKeyDown(KEY_LEFT_CONTROL || KEY_LEFT_SUPER)) /* NOTE: KEY_LEFT_SUPER is the command key for mac */
       { 
         m_Text += GetClipboardText();
 				break;
 			}
-      // Else just add the character 'v'
-			m_Text += 'v';
 			break;
 		case KEY_SPACE:
 			m_Text += ' ' ;
 			break;
-		case KEY_LEFT_SHIFT: // Ignore if just left-shift is pressed
+		case KEY_LEFT_SHIFT: 
 			break;
 		case KEY_BACKSPACE:
 			if (m_Text.length()) 
       {
-        // Check to see if the user wants to delete a word
 				if (IsKeyDown(KEY_LEFT_CONTROL || KEY_LEFT_SUPER)) /* NOTE: KEY_LEFT_SUPER is the command key for mac */
         { 
-          // Remove the last word of the text
 					int indexOfLastSpace = findLastIndexOf(' ');
 					if (indexOfLastSpace != -1) 
           {
@@ -176,13 +166,12 @@ void InputBox::handleKeyPress(int keyPressed)
 					m_Text = "";
 					break;
 				}
-        // Else just delete the last character
 				m_Text.pop_back();
 			}
 			break;
-		default: // If there are no 'special operations' or things to handle then check regular keys and casses
-      // Normal character i.e not a number or something
-			if (keyPressed >= 65 && keyPressed <= 90) // Normal character
+		default: 
+      // Upercase ascii values 
+			if (keyPressed >= 65 && keyPressed <= 90)
       {
 				if (!IsKeyDown(KEY_LEFT_SHIFT)) 
         {
@@ -191,17 +180,16 @@ void InputBox::handleKeyPress(int keyPressed)
           break;
 				} 
 				m_Text += static_cast<char>(keyPressed);
-			} else if (keyPressed >= 48 && keyPressed <= 57) // Number character
+			} else if (keyPressed >= 48 && keyPressed <= 57) 
       {
 				if (IsKeyDown(KEY_LEFT_SHIFT)) 
         {
-          handleSpecialNumberKeys(keyPressed); // Add the corresponding special character keys for the numbers
+          handleSpecialNumberKeys(keyPressed);
           break;
 				} 
 				m_Text += static_cast<char>(keyPressed);
 			} else 
       {
-        // Cases for all of the special characters
 				if (IsKeyDown(KEY_LEFT_SHIFT)) 
         {
           handleSpecialCharacters(keyPressed);
@@ -218,7 +206,6 @@ bool InputBox::updateAndRender(void)
 	Color outlineColor      = m_Style.baseOutlineColor;
 	Color textColor         = m_Style.baseTextColor;
 
-  // Set the display text to placeholder text if the user has no input in the box
 	std::string displayText = m_Text;
 	if (m_Text.length() <= 0) 
 		displayText = m_Style.placeholder;
@@ -229,7 +216,6 @@ bool InputBox::updateAndRender(void)
 		outlineColor    = m_Style.hoverOutlineColor;
 		textColor       = m_Style.hoverTextColor;
 
-    // Handle the key press and update the 'displayText' to have it fit inside the input box
 		int keyPressed = GetKeyPressed();
     if (keyPressed)
 	    handleKeyPress(keyPressed);
@@ -247,7 +233,6 @@ bool InputBox::updateAndRender(void)
 	if (MeasureText(m_Text.c_str(), m_Style.fontSize)+OFFSET_TEXT > m_Bounds.width-OFFSET_TEXT) 
 		displayText = getClippedText();
 
-  // Mouse is hovering the input box
 	if (CheckCollisionPointRec(GetMousePosition(), m_Bounds)) 
   {
 		SetMouseCursor(MOUSE_CURSOR_IBEAM);

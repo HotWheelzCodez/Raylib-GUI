@@ -43,6 +43,7 @@ public:
   // Setter methods
   // -----------------------------------------
   void setText(std::string text);           // Will set the text of the text box
+  void setText(char character);             // Will set the text to a single character, override method
   void setTextAlignment(int textAlignment); // Will set the text alignment of text box
   void setTextSize(int textSize);           // Will set the font size of the text
   void setTextColor(Color textColor);       // Will set the color of the text

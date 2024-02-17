@@ -1,4 +1,5 @@
 #include "../include/TextBox.hpp"
+#include <iostream>
 
 TextBox::TextBox(Rectangle bounds, TextBoxStyle style)
   : m_Bounds(bounds), m_Style(style) { }
@@ -21,6 +22,12 @@ void TextBox::setText(std::string text)
   }
 }
 
+void TextBox::setText(char character)
+{
+  m_Text = "";
+  m_Text += character;
+}
+
 int TextBox::findLastIndexOf(char toFind)
 {
   for (size_t i = m_Text.length()-1; i > 0; i--)
@@ -38,7 +45,6 @@ std::string TextBox::getClippedText(void)
 
 void TextBox::handleSpecialNumberKeys(int keyPressed)
 {
-  // Add the special character of the corresponding number character this only runs when the user is typing a number character and is holding down the shift-key
   switch (keyPressed) 
   {
 	  case KEY_ONE: 
@@ -76,7 +82,6 @@ void TextBox::handleSpecialNumberKeys(int keyPressed)
 
 void TextBox::handleSpecialCharacters(int keyPressed)
 {
-  // This only gets ran when the shift-key is being held down, thus these are the 'caps' versions of the keys
   switch (keyPressed) 
   {
 		case KEY_MINUS:
@@ -119,25 +124,23 @@ void TextBox::handleKeyPress(int keyPressed)
 {
   switch (keyPressed)
   {
-    // Don't do anything for control or command
     case KEY_LEFT_CONTROL:
       break;
     case KEY_LEFT_SUPER: /* NOTE: KEY_LEFT_SUPER is the command key for mac */
       break;
     case KEY_V:
-      // Check to see if control or command is being pressed, that means we gotta paste
       if (IsKeyDown(KEY_LEFT_CONTROL || KEY_LEFT_SUPER))
       {
         m_Text += GetClipboardText();
       } else
       {
-        m_Text += 'v'; // Just add the letter 'v' else
+        m_Text += 'v'; 
       }
       break;
     case KEY_SPACE:
       m_Text += ' ';
       break;
-    case KEY_LEFT_SHIFT || KEY_RIGHT_SHIFT: // Ignore LEFT_SHIFT and RIGHT_SHIFT
+    case KEY_LEFT_SHIFT || KEY_RIGHT_SHIFT: 
       break;
     case KEY_BACKSPACE:
       if (m_Text.length())
@@ -153,12 +156,11 @@ void TextBox::handleKeyPress(int keyPressed)
             m_Text = "";
           }
         }
-        // Else just delete the last character
         m_Text.pop_back();
       }
       break;
-    default: // If there is no 'special operation' then just process normal keyboard input
-      // Normal characters  i.e no numbers or anything
+    default: 
+      // Upercase ascii values
       if (keyPressed >= 65 && keyPressed <= 90) 
       {
         if (!IsKeyDown(KEY_LEFT_SHIFT))
@@ -167,13 +169,13 @@ void TextBox::handleKeyPress(int keyPressed)
           m_Text += static_cast<char>(keyPressed);
         } else
         {
-          m_Text + static_cast<char>(keyPressed);
+          m_Text += static_cast<char>(keyPressed);
         }
       } else if (keyPressed >= 48 && keyPressed <= 90)
       {
         if (IsKeyDown(KEY_LEFT_SHIFT))
         {
-          handleSpecialNumberKeys(keyPressed); // Add the corresponding special character keys for the numbers
+          handleSpecialNumberKeys(keyPressed); 
         } else
         {
           m_Text += static_cast<char>(keyPressed);
@@ -181,7 +183,6 @@ void TextBox::handleKeyPress(int keyPressed)
         break;
       } else
       {
-        // Cases for all the other special characters
         if (IsKeyDown(KEY_LEFT_SHIFT))
         {
           handleSpecialCharacters(keyPressed);
@@ -201,14 +202,12 @@ void TextBox::updateAndRender(void)
 
   std::string displayText = getClippedText();
 
-  // Check if mouse is hovering over the text box, and update properties
   if (CheckCollisionPointRec(GetMousePosition(), m_Bounds)) 
   {
     outlineColor = m_Style.selectedOutlineHoverColor;
     textColor    = m_Style.selectedTextColor;
     SetMouseCursor(MOUSE_CURSOR_IBEAM);
 
-    // Check if the user clicked the text box
     if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) 
       m_Style.editMode = !m_Style.editMode;
   }
@@ -218,31 +217,34 @@ void TextBox::updateAndRender(void)
   DrawRectangleRounded({ m_Bounds.x+OFFSET_TEXT, m_Bounds.y+OFFSET_TEXT, m_Bounds.width-(OFFSET_TEXT<<1), m_Bounds.height-(OFFSET_TEXT<<1) },
     m_Style.roundness, SEGMENTS, m_Style.backgroundColor);
 
-  // If the user is editing the text box
   if (m_Style.editMode) 
   {
     outlineColor = m_Style.selectedOutlineHoverColor;
     textColor    = m_Style.selectedTextColor;
 
-    // Get the key, determine the key, add the char to the string
     int keyPressed = GetKeyPressed();
     if (keyPressed) 
       handleKeyPress(keyPressed);
 
-    // Check to see if you need to start a new line, i.e: if the text is at the ends of the bounds of the text box
     std::string line = "";
-    for (size_t i = m_Text.length()-1; i > 0; i--) 
-    {
-      if (m_Text[i] == '\n')
-        break;
 
-      line += m_Text[i];
+    if (m_Text.length())
+    {
+      for (size_t i = m_Text.length()-1; i > 0; i--) 
+      {
+        if (m_Text[i] == '\n')
+          break;
+
+        line += m_Text[i];
+      }
+
+      if (MeasureText(line.c_str(), m_Style.fontSize) >= m_Bounds.width-OFFSET_TEXT-(OFFSET_TEXT<<1)-m_Style.fontSize)
+        m_Text += '\n';
     }
 
-    if (MeasureText(line.c_str(), m_Style.fontSize) >= m_Bounds.width-OFFSET_TEXT-(OFFSET_TEXT<<1)-m_Style.fontSize)
-      m_Text += '\n';
+    displayText = getClippedText();
 
-    // Draw the cursor
+    // Calculate cursor position
     int height = 0;
     int width  = 0; 
 
@@ -253,10 +255,10 @@ void TextBox::updateAndRender(void)
         if (displayText[i] == '\n')
           height++;
       }
-      height *= m_Style.fontSize + (m_Style.fontSize>>1);
+      height *= m_Style.fontSize;
 
       line = "";
-      for (size_t i = displayText.length()-1; i >= 0; i--) 
+      for (int i = displayText.length()-1; i >= 0; i--) 
       {
         if (displayText[i] == '\n')
           break;
@@ -266,14 +268,14 @@ void TextBox::updateAndRender(void)
 
       width = MeasureText(line.c_str(), m_Style.fontSize);
     }
-    
+   
+    // Draw the cursor
     DrawRectangleRounded({ m_Bounds.x+(OFFSET_TEXT<<1)+width, m_Bounds.y+OFFSET_TEXT+m_Style.fontSize+height-(m_Style.fontSize>>1),
-      static_cast<float>(m_Style.cursorWidth), static_cast<float>(m_Style.fontSize<<1) }, m_Style.roundness, SEGMENTS, textColor);
+      static_cast<float>(m_Style.cursorWidth), static_cast<float>(m_Style.fontSize) }, m_Style.roundness, SEGMENTS, textColor);
   }
 
   displayText = getClippedText();
 
-  // Draw the text based off of the text alignment type
   switch (m_Style.textAlignment) 
   {
     case TEXT_ALIGNMENT_LEFT:
