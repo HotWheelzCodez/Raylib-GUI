@@ -1,4 +1,4 @@
-#include "../include/panel.hpp"
+#include "../include/Panel.hpp"
 
 Panel::Panel(Rectangle bounds, PanelStyle style, bool resizeTop, bool resizeRight, bool resizeBottom, bool resizeLeft)
   : m_Bounds(bounds), m_Style(style), m_ResizeTop(resizeTop), m_ResizeRight(resizeRight), m_ResizeBottom(resizeBottom), m_ResizeLeft(resizeLeft) { }
