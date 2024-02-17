@@ -1,4 +1,4 @@
-#include "../include/button.hpp"
+#include "../include/Button.hpp"
 
 Button::Button(Rectangle bounds, ButtonStyle style)
   : m_Bounds(bounds), m_Style(style) { }
