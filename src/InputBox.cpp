@@ -1,4 +1,4 @@
-#include "../include/inputBox.hpp"
+#include "../include/InputBox.hpp"
 
 InputBox::InputBox(Rectangle bounds, InputBoxStyle style)
   : m_Bounds(bounds), m_Style(style) { }
