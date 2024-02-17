@@ -1,4 +1,4 @@
-#include "../include/textBox.hpp"
+#include "../include/TextBox.hpp"
 
 TextBox::TextBox(Rectangle bounds, TextBoxStyle style)
   : m_Bounds(bounds), m_Style(style) { }
