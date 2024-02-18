@@ -1,102 +1,135 @@
 #include "../include/raylib.h"
 #include "../include/gui.hpp"
-#include "../include/button.hpp"
-#include "../include/inputBox.hpp"
-#include "../include/panel.hpp"
-#include "../include/textBox.hpp"
+#include "../include/Button.hpp"
+#include "../include/InputBox.hpp"
+#include "../include/Panel.hpp"
+#include "../include/TextBox.hpp"
 
 #define BACKGROUND_COLOR { 25, 25, 30, 255 }
 
 int main(void)
 {
-	int windowWidth  = 800;
-	int windowHeight = 600;
+  int windowWidth  = 1200;
+  int windowHeight = 1000;
 
-	InitWindow(windowWidth, windowHeight, "Raylib GUI");
-	SetWindowState(FLAG_WINDOW_RESIZABLE);
-	SetTargetFPS(60);
+  ButtonStyle bs_Exit = {
+    CLEAR,
+    RED,
+    WHITE,
+    WHITE,
+    0.0f,
+    20,
+    TEXT_ALIGNMENT_CENTER,
+    "Exit"
+  };
 
-	ButtonStyle bs_Exit = {
-		CLEAR,
-		RED,
-		WHITE,
-		WHITE,
-		0.0f,
-		10,
-		TEXT_ALIGNMENT_CENTER,
-		"Exit"
-	};
-
-  ButtonStyle bs_Submit = bs_Exit;
-  bs_Submit.baseBackgroundColor = BLUE;
-  bs_Submit.hoverBackgroundColor = DARKBLUE;
-  bs_Submit.baseTextColor = BACKGROUND_COLOR;
-  bs_Submit.text = "Submit";
+  ButtonStyle bs_Submit = {
+    BLUE,
+    DARKBLUE,
+    BACKGROUND_COLOR,
+    WHITE,
+    0.5f,
+    20,
+    TEXT_ALIGNMENT_CENTER,
+    "Submit"
+  };
 
   InputBoxStyle ibs_Input = {
-    BACKGROUND_COLOR,
     CLEAR,
-    DARKBLUE,
+    CLEAR,
     BLUE,
+    DARKBLUE,
     GRAY,
     WHITE,
     0.5f,
     0.2f,
     false,
-    20,
-    1,
+    30,
+    2,
     "Input: ",
     "Input..."
   };
 
   TextBoxStyle tbs_Output = {
     GRAY,
-    DARKBLUE,
     BLUE,
+    DARKBLUE,
     WHITE,
     WHITE,
+    0.5f,
     0.2f,
-    0.25f,
     false,
     TEXT_ALIGNMENT_LEFT,
-    20,
-    1
+    40,
+    2
   };
 
-	Button b_Exit({ static_cast<float>(windowWidth)-30, 0, 30, 20 }, bs_Exit);
-  Button b_Submit({ static_cast<float>(windowWidth>>1)-100+200+OFFSET_TEXT, (static_cast<float>(windowHeight)/10)-10+5, 40, 10 }, bs_Submit);
+  int b_ExitWidth  = windowWidth/20;
+  int b_ExitHeight = windowHeight/20;
+  Button b_Exit({ static_cast<float>(windowWidth)-b_ExitWidth, 0, static_cast<float>(b_ExitWidth), static_cast<float>(b_ExitHeight) }, bs_Exit);
 
-  InputBox ib_Input({ static_cast<float>(windowWidth>>1)-100, (static_cast<float>(windowHeight)/10)-10, 200, 20 }, ibs_Input);
- 
-  TextBox tb_Output({ static_cast<float>(windowWidth>>1)-200, static_cast<float>(windowHeight>>1)-100, 400, 200 }, tbs_Output);
+  int ib_InputWidth  = windowWidth/3;
+  int ib_InputHeight = windowHeight/15;
+  InputBox ib_Input({ static_cast<float>(windowWidth>>1)-(ib_InputWidth>>1), static_cast<float>(windowHeight)/10,
+    static_cast<float>(ib_InputWidth), static_cast<float>(ib_InputHeight )}, ibs_Input);
+             
+  int b_SubmitWidth  = windowWidth/5;
+  int b_SubmitHeight = windowHeight/15;
+  Button b_Submit({ static_cast<float>(windowWidth>>1)+(ib_InputWidth>>1)+OFFSET_TEXT, static_cast<float>(windowHeight)/10,
+    static_cast<float>(b_SubmitWidth), static_cast<float>(b_SubmitHeight) }, bs_Submit);
 
-	while (!WindowShouldClose()) {
-		SetMouseCursor(MOUSE_CURSOR_DEFAULT);
-		windowWidth  = GetScreenWidth();
-		windowHeight = GetScreenHeight();
-		BeginDrawing();
-			ClearBackground(BACKGROUND_COLOR);
+  int tb_OutputWidth  = windowWidth>>1;
+  int tb_OutputHeight = windowHeight>>1;
+  TextBox tb_Output({ static_cast<float>(windowWidth>>1)-(tb_OutputWidth>>1), static_cast<float>(windowHeight>>1)-(tb_OutputHeight>>1),
+    static_cast<float>(tb_OutputWidth), static_cast<float>(tb_OutputHeight) }, tbs_Output);
 
-      ib_Input.updateAndRender();
-      tb_Output.updateAndRender();
+  SetConfigFlags(FLAG_WINDOW_RESIZABLE);
+  InitWindow(windowWidth, windowHeight, "Raylib-GUI Test");
+  SetTargetFPS(60);
 
-      if (b_Submit.updateAndRender())
-      {
-        std::string text = ib_Input.getInput();
-        if (text.length())
-          tb_Output.setText(text[text.length()-1]);
-      }
+  while (!WindowShouldClose())
+  {
+    BeginDrawing();
+    ClearBackground(BACKGROUND_COLOR);
 
-      if (b_Exit.updateAndRender()) {
-				break;
-			}
+    windowWidth  = GetScreenWidth();
+    windowHeight = GetScreenHeight();
 
-      b_Exit.resize({ static_cast<float>(windowWidth)-30, 0, 30, 20 });
-      ib_Input.resize({ static_cast<float>(windowWidth>>1)-100, (static_cast<float>(windowHeight)/10)-10, 200, 20 });
-      tb_Output.resize({ static_cast<float>(windowWidth>>1)-200, static_cast<float>(windowHeight>>1)-100, 400, 200 });
+    b_ExitWidth  = windowWidth/20;
+    b_ExitHeight = windowHeight/20;
+    b_Exit.resize({ static_cast<float>(windowWidth)-b_ExitWidth, 0, static_cast<float>(b_ExitWidth), static_cast<float>(b_ExitHeight) });
 
-		EndDrawing();
-	}
+    ib_InputWidth  = windowWidth/3;
+    ib_InputHeight = windowHeight/15;
+    ib_Input.resize({ static_cast<float>(windowWidth>>1)-(ib_InputWidth>>1), static_cast<float>(windowHeight)/10, static_cast<float>(ib_InputWidth),
+      static_cast<float>(ib_InputHeight )});
 
-	CloseWindow();
+    b_SubmitWidth  = windowHeight/5;
+    b_SubmitHeight = windowHeight/15;
+    b_Submit.resize({ static_cast<float>(windowWidth>>1)+(ib_InputWidth>>1)+OFFSET_TEXT, static_cast<float>(windowHeight)/10,
+      static_cast<float>(b_SubmitWidth), static_cast<float>(b_SubmitHeight) });
+
+    tb_OutputWidth  = windowWidth>>1;
+    tb_OutputHeight = windowHeight>>1;
+    tb_Output.resize({ static_cast<float>(windowWidth>>1)-(tb_OutputWidth>>1), static_cast<float>(windowHeight>>1)-(tb_OutputHeight>>1),
+      static_cast<float>(tb_OutputWidth), static_cast<float>(tb_OutputHeight) });
+
+    ib_Input.updateAndRender();
+
+    tb_Output.updateAndRender();
+
+    if (b_Submit.updateAndRender())
+    {
+      std::string text = ib_Input.getInput();
+      if (text.length())
+        tb_Output.setText(text[text.length()-1]);
+    }
+
+    if (b_Exit.updateAndRender()) 
+      break;
+
+    EndDrawing();
+  }
+
+  CloseWindow();
 }

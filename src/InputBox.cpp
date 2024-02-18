@@ -1,14 +1,31 @@
 #include "../include/InputBox.hpp"
+#include <iostream>
 
 InputBox::InputBox(Rectangle bounds, InputBoxStyle style)
-  : m_Bounds(bounds), m_Style(style) { }
+  : m_Bounds(bounds), m_Style(style) 
+{
+  m_CursorPosition = 0;
+}
 
-void InputBox::resize(Rectangle bounds) { m_Bounds = bounds; }
+void InputBox::resize(Rectangle bounds) 
+{ 
+  m_Bounds = bounds; 
+}
 
-std::string InputBox::getInput() { return m_Text; }
-Rectangle InputBox::getBounds() { return m_Bounds; }
+std::string InputBox::getInput() 
+{ 
+  return m_Text; 
+}
 
-void InputBox::setEditMode(bool editMode) { m_Style.editMode = editMode; }
+Rectangle InputBox::getBounds() 
+{ 
+  return m_Bounds; 
+}
+
+void InputBox::setEditMode(bool editMode) 
+{ 
+  m_Style.editMode = editMode; 
+}
 
 int InputBox::findLastIndexOf(char toFind)
 {
@@ -42,17 +59,24 @@ void InputBox::handleArrowKeys(int keyPressed)
   {
     case KEY_ARROW_RIGHT: 
       if (m_CursorPosition < m_Text.length())
+      {
         m_CursorPosition++;
+        m_CursorOffset = MeasureText(&m_Text[m_CursorPosition], m_Style.fontSize);
+      }
       break;
     case KEY_ARROW_LEFT: 
       if (m_CursorPosition > 0)
+      {
         m_CursorPosition--;
+        m_CursorOffset = MeasureText(&m_Text[m_CursorPosition], m_Style.fontSize) * -1;
+      }
       break;
     case KEY_ARROW_DOWN: 
       break;  
     case KEY_ARROW_UP: 
       break;  
   }
+  std::cout << m_CursorPosition << std::endl;
 }
 
 void InputBox::handleSpecialNumberKeys(int keyPressed)
@@ -60,36 +84,67 @@ void InputBox::handleSpecialNumberKeys(int keyPressed)
   switch (keyPressed) 
   {
 	  case KEY_ONE: 
-			m_Text += '!';
+      if (m_CursorPosition == m_Text.length())
+			  m_Text += '!';
+      else
+        m_Text.insert(m_CursorPosition, "!");
 			break;
 		case KEY_TWO:
-			m_Text += '@';
+      if (m_CursorPosition == m_Text.length())
+			  m_Text += '@';
+      else
+        m_Text.insert(m_CursorPosition, "@");
 			break;
 		case KEY_THREE:
-			m_Text += '#';
+      if (m_CursorPosition == m_Text.length())
+			  m_Text += '#';
+      else
+        m_Text.insert(m_CursorPosition, "#");
 		  break;
 		case KEY_FOUR:
-			m_Text += '$';
+      if (m_CursorPosition == m_Text.length())
+			  m_Text += '$';
+      else
+        m_Text.insert(m_CursorPosition, "$");
 			break;
 		case KEY_FIVE:
-			m_Text += '%';
+      if (m_CursorPosition == m_Text.length())
+			  m_Text += '%';
+      else
+        m_Text.insert(m_CursorPosition, "%");
 			break;
 		case KEY_SIX:
-			m_Text += '^';
+      if (m_CursorPosition == m_Text.length())
+			  m_Text += '^';
+      else
+        m_Text.insert(m_CursorPosition, "^");
 		  break;
 		case KEY_SEVEN:
-			m_Text += '&';
+      if (m_CursorPosition == m_Text.length())
+			  m_Text += '&';
+      else
+        m_Text.insert(m_CursorPosition, "&");
 			break;
 		case KEY_EIGHT:
-			m_Text += '*';
+      if (m_CursorPosition == m_Text.length())
+			  m_Text += '*';
+      else
+        m_Text.insert(m_CursorPosition, "*");
 			break;
 		case KEY_NINE:
-			m_Text += '(';
+      if (m_CursorPosition == m_Text.length())
+			  m_Text += '(';
+      else
+        m_Text.insert(m_CursorPosition, "(");
 			break;
 		case KEY_ZERO:
-			m_Text += ')';
+      if (m_CursorPosition == m_Text.length())
+			  m_Text += ')';
+      else
+        m_Text.insert(m_CursorPosition, ")");
 		break;
 	}
+  std::cout << m_CursorPosition << std::endl;
 }
 
 void InputBox::handleSpecialCharacters(int keyPressed)
@@ -97,39 +152,73 @@ void InputBox::handleSpecialCharacters(int keyPressed)
   switch (keyPressed) 
   {
 		case KEY_MINUS:
-			m_Text += '_';
+      if (m_CursorPosition == m_Text.length())
+			  m_Text += '_';
+      else
+        m_Text.insert(m_CursorPosition, "_");
 			break;
 		case KEY_EQUAL:
-			m_Text += '+';
+      if (m_CursorPosition == m_Text.length())
+			  m_Text += '+';
+      else
+        m_Text.insert(m_CursorPosition, "+");
 			break;
 		case KEY_COMMA:
-      m_Text += '<';
+      if (m_CursorPosition == m_Text.length())
+			  m_Text += '<';
+      else
+        m_Text.insert(m_CursorPosition, "<");
 			break;
 		case KEY_PERIOD:
-      m_Text += '>' ;
+      if (m_CursorPosition == m_Text.length())
+			  m_Text += '>';
+      else
+        m_Text.insert(m_CursorPosition, ">");
 			break;
 		case KEY_SLASH:
-      m_Text += '?';
+      if (m_CursorPosition == m_Text.length())
+			  m_Text += '?';
+      else
+        m_Text.insert(m_CursorPosition, "?");
 			break;
 		case KEY_SEMICOLON:
-      m_Text += ':';
+      if (m_CursorPosition == m_Text.length())
+			  m_Text += ':';
+      else
+        m_Text.insert(m_CursorPosition, ":");
 			break;
 		case KEY_APOSTROPHE:
-      m_Text += '"';
+      if (m_CursorPosition == m_Text.length())
+			  m_Text += '"';
+      else
+        m_Text.insert(m_CursorPosition, "\"");
 			break;
 		case KEY_BACKSLASH:
-      m_Text += '|';
+      if (m_CursorPosition == m_Text.length())
+			  m_Text += '|';
+      else
+        m_Text.insert(m_CursorPosition, "|");
 			break;
 		case KEY_LEFT_BRACKET:
-      m_Text += '{';
+      if (m_CursorPosition == m_Text.length())
+			  m_Text += '{';
+      else
+        m_Text.insert(m_CursorPosition, "{");
 			break;
 		case KEY_RIGHT_BRACKET:
-      m_Text += '}';
+      if (m_CursorPosition == m_Text.length())
+			  m_Text += '}';
+      else
+        m_Text.insert(m_CursorPosition, "}");
 			break;
 		case KEY_GRAVE:
-      m_Text += '~';
+      if (m_CursorPosition == m_Text.length())
+			  m_Text += '~';
+      else
+        m_Text.insert(m_CursorPosition, "~");
 			break;
 	}
+  std::cout << m_CursorPosition << std::endl;
 }
 
 void InputBox::handleKeyPress(int keyPressed)
@@ -143,19 +232,26 @@ void InputBox::handleKeyPress(int keyPressed)
 		case KEY_V:
 			if (IsKeyDown(KEY_LEFT_CONTROL || KEY_LEFT_SUPER)) /* NOTE: KEY_LEFT_SUPER is the command key for mac */
       { 
-        m_Text += GetClipboardText();
+        const char* clipboardText = GetClipboardText();
+        m_Text += clipboardText;
+        m_CursorPosition += static_cast<int>(strlen(clipboardText));
 				break;
 			}
+      m_Text += 'v'; 
 			break;
 		case KEY_SPACE:
-			m_Text += ' ' ;
+      if (m_CursorPosition == m_Text.length())
+			  m_Text += ' ' ;
+      else
+        m_Text.insert(m_CursorPosition, " ");
+      m_CursorPosition++;
 			break;
 		case KEY_LEFT_SHIFT: 
 			break;
 		case KEY_BACKSPACE:
 			if (m_Text.length()) 
-      {
-				if (IsKeyDown(KEY_LEFT_CONTROL || KEY_LEFT_SUPER)) /* NOTE: KEY_LEFT_SUPER is the command key for mac */
+      { /* Implementation of single word removing - needs working on
+				if (IsKeyDown(KEY_LEFT_CONTROL || KEY_LEFT_SUPER))  NOTE: KEY_LEFT_SUPER is the command key for mac 
         { 
 					int indexOfLastSpace = findLastIndexOf(' ');
 					if (indexOfLastSpace != -1) 
@@ -166,7 +262,12 @@ void InputBox::handleKeyPress(int keyPressed)
 					m_Text = "";
 					break;
 				}
-				m_Text.pop_back();
+        */   
+        if (m_CursorPosition == m_Text.length())
+          m_Text.pop_back();
+        else
+          (m_CursorPosition) ? m_Text.erase(m_CursorPosition-1, m_CursorPosition) : nullptr;
+        m_CursorPosition--;
 			}
 			break;
 		default: 
@@ -176,35 +277,57 @@ void InputBox::handleKeyPress(int keyPressed)
 				if (!IsKeyDown(KEY_LEFT_SHIFT)) 
         {
 					keyPressed += 32; // Lowercase the key by shifting the ascii value
-					m_Text += static_cast<char>(keyPressed);
+          if (m_CursorPosition == m_Text.length())
+				    m_Text += static_cast<char>(keyPressed);
+          else
+            m_Text.insert(m_Text.begin() + m_CursorPosition, static_cast<char>(keyPressed));
+          m_CursorPosition++;
           break;
 				} 
-				m_Text += static_cast<char>(keyPressed);
+        if (m_CursorPosition == m_Text.length())
+				  m_Text += static_cast<char>(keyPressed);
+        else
+          m_Text.insert(m_Text.begin() + m_CursorPosition, static_cast<char>(keyPressed));
+        m_CursorPosition++;
 			} else if (keyPressed >= 48 && keyPressed <= 57) 
       {
 				if (IsKeyDown(KEY_LEFT_SHIFT)) 
         {
           handleSpecialNumberKeys(keyPressed);
+          m_CursorPosition++;
           break;
 				} 
-				m_Text += static_cast<char>(keyPressed);
-			} else 
+        if (m_CursorPosition == m_Text.length())
+				  m_Text += static_cast<char>(keyPressed);
+        else
+          m_Text.insert(m_Text.begin() + m_CursorPosition, static_cast<char>(keyPressed));
+        m_CursorPosition++;
+			} else if (keyPressed >= 262 && keyPressed <= 265)
+      {
+        handleArrowKeys(keyPressed);
+      } else 
       {
 				if (IsKeyDown(KEY_LEFT_SHIFT)) 
         {
           handleSpecialCharacters(keyPressed);
+          m_CursorPosition++;
           break;
 				} 
-			  m_Text += static_cast<char>(keyPressed);
+        if (m_CursorPosition == m_Text.length())
+			    m_Text += static_cast<char>(keyPressed);
+        else
+          m_Text.insert(m_Text.begin() + m_CursorPosition, static_cast<char>(keyPressed));
+        m_CursorPosition++;
 	  }
 	}
+  std::cout << m_CursorPosition << std::endl;
 }
 
 bool InputBox::updateAndRender(void)
 {
-	Color backgroundColor   = m_Style.baseBackgroundColor;
-	Color outlineColor      = m_Style.baseOutlineColor;
-	Color textColor         = m_Style.baseTextColor;
+	Color backgroundColor = m_Style.baseBackgroundColor;
+	Color outlineColor    = m_Style.baseOutlineColor;
+	Color textColor       = m_Style.baseTextColor;
 
 	std::string displayText = m_Text;
 	if (m_Text.length() <= 0) 
@@ -226,7 +349,7 @@ bool InputBox::updateAndRender(void)
 			displayText = m_Text;
 
     // Draw the cursor
-		DrawRectangleRec({ m_Bounds.x+OFFSET_TEXT+MeasureText(displayText.c_str(), m_Style.fontSize)+OFFSET_CURSOR, m_Bounds.y+OFFSET_CURSOR, 
+		DrawRectangleRec({ m_Bounds.x+OFFSET_TEXT+MeasureText(displayText.c_str(), m_Style.fontSize)+OFFSET_CURSOR+m_CursorOffset, m_Bounds.y+OFFSET_CURSOR, 
       static_cast<float>(m_Style.cursorThickness), m_Bounds.height-OFFSET_CURSOR-m_Style.outlineThickness }, textColor);
 	}
 

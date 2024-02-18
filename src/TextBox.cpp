@@ -32,7 +32,8 @@ int TextBox::findLastIndexOf(char toFind)
 {
   for (size_t i = m_Text.length()-1; i > 0; i--)
   {
-    if (m_Text[i] == toFind) return static_cast<int>(i);
+    if (m_Text[i] == toFind) 
+      return static_cast<int>(i);
   }
 
   return -1;
@@ -255,7 +256,7 @@ void TextBox::updateAndRender(void)
         if (displayText[i] == '\n')
           height++;
       }
-      height *= m_Style.fontSize;
+      height *= m_Style.fontSize - ((m_Style.fontSize>>1)>>1);
 
       line = "";
       for (int i = displayText.length()-1; i >= 0; i--) 
@@ -270,7 +271,7 @@ void TextBox::updateAndRender(void)
     }
    
     // Draw the cursor
-    DrawRectangleRounded({ m_Bounds.x+(OFFSET_TEXT<<1)+width, m_Bounds.y+OFFSET_TEXT+m_Style.fontSize+height-(m_Style.fontSize>>1),
+    DrawRectangleRounded({ m_Bounds.x+(OFFSET_TEXT<<1)+width+OFFSET_CURSOR, m_Bounds.y+OFFSET_TEXT+m_Style.fontSize+height,
       static_cast<float>(m_Style.cursorWidth), static_cast<float>(m_Style.fontSize) }, m_Style.roundness, SEGMENTS, textColor);
   }
 
@@ -279,7 +280,8 @@ void TextBox::updateAndRender(void)
   switch (m_Style.textAlignment) 
   {
     case TEXT_ALIGNMENT_LEFT:
-      DrawText(displayText.c_str(), m_Bounds.x+(OFFSET_TEXT<<1), m_Bounds.y+OFFSET_TEXT+m_Style.fontSize, m_Style.fontSize, textColor);
+      DrawText(displayText.c_str(), static_cast<int>(m_Bounds.x)+(OFFSET_TEXT<<1), static_cast<int>(m_Bounds.y)+OFFSET_TEXT+m_Style.fontSize,
+        m_Style.fontSize, textColor);
       break;
     case TEXT_ALIGNMENT_CENTER:
       break;
