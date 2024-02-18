@@ -1,8 +1,8 @@
 # Raylib-GUI
-This is a simple to use and very customizable immediate GUI using raylib in C++ with the intent to resemble
-a CSS style of coding when creating different styles for different components. While there are other options
-primarly raygui I wanted to make something more modern looking as far as UI, this project was started because
-I wanted a 'cleaner' (in my opinion) GUI.
+This is a simple to use and very customizable immediate GUI using [Raylib](https://github.com/raysan5/raylib) 
+in C++ with the intent to resemble a CSS style of coding when creating different styles for different components. 
+While there are other options primarly raygui I wanted to make something more modern looking as far as UI, 
+this project was started because I wanted a 'cleaner' (in my opinion) GUI.
 
 This project does require the use of CMake to build and compile, this does not build into a library, it just
 compiles right along with your project. If you are on Windows; run the 'run.bat' file, if you are on Unix 
