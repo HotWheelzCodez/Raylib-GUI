@@ -52,6 +52,7 @@ private:
 	InputBoxStyle m_Style;
   std::string   m_Text;
   int           m_CursorPosition;
+  int           m_CursorOffset;
 
   // Member methods
   // ---------------------------------------------
