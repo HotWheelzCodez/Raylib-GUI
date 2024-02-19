@@ -89,6 +89,8 @@ int main(void)
 
   while (!WindowShouldClose())
   {
+    SetMouseCursor(MOUSE_CURSOR_DEFAULT);
+    
     BeginDrawing();
     ClearBackground(BACKGROUND_COLOR);
 
