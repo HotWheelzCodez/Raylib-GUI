@@ -30,9 +30,8 @@ void InputBox::setEditMode(bool editMode)
 int InputBox::findLastIndexOf(char toFind)
 {
 	for (size_t i = m_Text.length()-1; i > 0; i--) 
-  {
-		if (m_Text[i] == toFind) return static_cast<int>(i);
-	}
+    if (m_Text[i] == toFind) 
+      return static_cast<int>(i);
 
 	return -1;
 }
@@ -61,22 +60,29 @@ void InputBox::handleArrowKeys(int keyPressed)
       if (m_CursorPosition < m_Text.length())
       {
         m_CursorPosition++;
-        m_CursorOffset = MeasureText(&m_Text[m_CursorPosition], m_Style.fontSize);
+        m_CursorOffset = MeasureText(&m_Text[m_CursorPosition], m_Style.fontSize) * -1;
       }
       break;
     case KEY_ARROW_LEFT: 
       if (m_CursorPosition > 0)
       {
-        m_CursorPosition--;
-        m_CursorOffset = MeasureText(&m_Text[m_CursorPosition], m_Style.fontSize) * -1;
-      }
+        if (m_CursorPosition < m_Text.length()-m_DisplayText.length() && m_Text.length() > m_DisplayText.length())
+        {
+          std::cout << "True" << std::endl;
+          m_DisplayText = m_Text.substr(m_Text.length()-m_DisplayText.length()-1, m_DisplayText.length()-1);
+          m_CursorOffset = 0;
+        } else
+        {
+          m_CursorPosition--;
+          m_CursorOffset = MeasureText(&m_Text[m_CursorPosition], m_Style.fontSize) * -1;
+        }
+      } 
       break;
     case KEY_ARROW_DOWN: 
       break;  
     case KEY_ARROW_UP: 
       break;  
   }
-  std::cout << m_CursorPosition << std::endl;
 }
 
 void InputBox::handleSpecialNumberKeys(int keyPressed)
@@ -144,7 +150,6 @@ void InputBox::handleSpecialNumberKeys(int keyPressed)
         m_Text.insert(m_CursorPosition, ")");
 		break;
 	}
-  std::cout << m_CursorPosition << std::endl;
 }
 
 void InputBox::handleSpecialCharacters(int keyPressed)
@@ -218,7 +223,6 @@ void InputBox::handleSpecialCharacters(int keyPressed)
         m_Text.insert(m_CursorPosition, "~");
 			break;
 	}
-  std::cout << m_CursorPosition << std::endl;
 }
 
 void InputBox::handleKeyPress(int keyPressed)
@@ -250,8 +254,8 @@ void InputBox::handleKeyPress(int keyPressed)
 			break;
 		case KEY_BACKSPACE:
 			if (m_Text.length()) 
-      { /* Implementation of single word removing - needs working on
-				if (IsKeyDown(KEY_LEFT_CONTROL || KEY_LEFT_SUPER))  NOTE: KEY_LEFT_SUPER is the command key for mac 
+      { 
+				if (IsKeyDown(KEY_LEFT_CONTROL || KEY_LEFT_SUPER)) /* NOTE: KEY_LEFT_SUPER is the command key for mac */
         { 
 					int indexOfLastSpace = findLastIndexOf(' ');
 					if (indexOfLastSpace != -1) 
@@ -262,12 +266,20 @@ void InputBox::handleKeyPress(int keyPressed)
 					m_Text = "";
 					break;
 				}
-        */   
+
         if (m_CursorPosition == m_Text.length())
+        {
           m_Text.pop_back();
+          m_CursorPosition--;
+        }
         else
-          (m_CursorPosition) ? m_Text.erase(m_CursorPosition-1, m_CursorPosition) : nullptr;
-        m_CursorPosition--;
+        {
+          if (m_CursorPosition)
+          {
+            m_Text.erase(m_CursorPosition-1, 1);
+            m_CursorPosition--;
+          }
+        }
 			}
 			break;
 		default: 
@@ -320,7 +332,6 @@ void InputBox::handleKeyPress(int keyPressed)
         m_CursorPosition++;
 	  }
 	}
-  std::cout << m_CursorPosition << std::endl;
 }
 
 bool InputBox::updateAndRender(void)
@@ -329,9 +340,9 @@ bool InputBox::updateAndRender(void)
 	Color outlineColor    = m_Style.baseOutlineColor;
 	Color textColor       = m_Style.baseTextColor;
 
-	std::string displayText = m_Text;
+	m_DisplayText = m_Text;
 	if (m_Text.length() <= 0) 
-		displayText = m_Style.placeholder;
+		m_DisplayText = m_Style.placeholder;
 
 	if (m_Style.editMode) 
   {
@@ -344,17 +355,17 @@ bool InputBox::updateAndRender(void)
 	    handleKeyPress(keyPressed);
 
 		if (MeasureText(m_Text.c_str(), m_Style.fontSize)+OFFSET_TEXT > m_Bounds.width-OFFSET_TEXT) 
-			displayText = getClippedText();
+			m_DisplayText = getClippedText();
 		else 
-			displayText = m_Text;
+			m_DisplayText = m_Text;
 
     // Draw the cursor
-		DrawRectangleRec({ m_Bounds.x+OFFSET_TEXT+MeasureText(displayText.c_str(), m_Style.fontSize)+OFFSET_CURSOR+m_CursorOffset, m_Bounds.y+OFFSET_CURSOR, 
+		DrawRectangleRec({ m_Bounds.x+OFFSET_TEXT+MeasureText(m_DisplayText.c_str(), m_Style.fontSize)+OFFSET_CURSOR+m_CursorOffset, m_Bounds.y+OFFSET_CURSOR, 
       static_cast<float>(m_Style.cursorThickness), m_Bounds.height-OFFSET_CURSOR-m_Style.outlineThickness }, textColor);
 	}
 
 	if (MeasureText(m_Text.c_str(), m_Style.fontSize)+OFFSET_TEXT > m_Bounds.width-OFFSET_TEXT) 
-		displayText = getClippedText();
+		m_DisplayText = getClippedText();
 
 	if (CheckCollisionPointRec(GetMousePosition(), m_Bounds)) 
   {
@@ -370,7 +381,7 @@ bool InputBox::updateAndRender(void)
 			DrawRectangleRoundedLines(m_Bounds, m_Style.roundness, SEGMENTS, m_Style.outlineThickness, outlineColor);
 			DrawRectangleRounded({ m_Bounds.x+m_Style.outlineThickness, m_Bounds.y+m_Style.outlineThickness, m_Bounds.height-m_Style.outlineThickness,
 				m_Bounds.width-m_Style.outlineThickness }, m_Style.roundness, SEGMENTS, backgroundColor);
-			DrawText(displayText.c_str(), m_Bounds.x+OFFSET_TEXT, m_Bounds.y+(static_cast<int>(m_Bounds.height)>>1)-(m_Style.fontSize>>1), m_Style.fontSize, textColor);
+			DrawText(m_DisplayText.c_str(), m_Bounds.x+OFFSET_TEXT, m_Bounds.y+(static_cast<int>(m_Bounds.height)>>1)-(m_Style.fontSize>>1), m_Style.fontSize, textColor);
 
 			m_Style.editMode = !m_Style.editMode;
 		}
@@ -380,7 +391,7 @@ bool InputBox::updateAndRender(void)
 	DrawRectangleRoundedLines(m_Bounds, m_Style.roundness, SEGMENTS, m_Style.outlineThickness, outlineColor);
 	DrawRectangleRounded({ m_Bounds.x+m_Style.outlineThickness, m_Bounds.y+m_Style.outlineThickness, m_Bounds.height-m_Style.outlineThickness,
 		m_Bounds.width-m_Style.outlineThickness }, m_Style.roundness, SEGMENTS, backgroundColor);
-	DrawText(displayText.c_str(), m_Bounds.x+OFFSET_TEXT, m_Bounds.y+(static_cast<int>(m_Bounds.height)>>1)-(m_Style.fontSize>>1), m_Style.fontSize, textColor);
+	DrawText(m_DisplayText.c_str(), m_Bounds.x+OFFSET_TEXT, m_Bounds.y+(static_cast<int>(m_Bounds.height)>>1)-(m_Style.fontSize>>1), m_Style.fontSize, textColor);
 
   // Draw the 'title' text, i.e the text to the left of the input box
 	DrawText(m_Style.title.c_str(), m_Bounds.x-MeasureText(m_Style.title.c_str(), m_Style.fontSize)-OFFSET_TEXT, 

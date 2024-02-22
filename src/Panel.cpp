@@ -5,16 +5,40 @@ Panel::Panel(Rectangle bounds, PanelStyle style, bool resizeTop, bool resizeRigh
 
 // Getter methods
 // --------------------------------------------------------
-Rectangle Panel::getBounds(void) { return m_Bounds; }
+Rectangle Panel::getBounds(void) 
+{ 
+  return m_Bounds; 
+}
 
 // Setter methods
 // ----------------------------------------------------------------
-void Panel::setWidth(int width) { m_Bounds.width = width; }
-void Panel::setHeight(int height) { m_Bounds.height = height; }
-void Panel::setXPos(int x) { m_Bounds.x = x; }
-void Panel::setYPos(int y) { m_Bounds.y = y; }
+void Panel::setWidth(int width) 
+{ 
+  m_Bounds.width = width;
+}
 
-void Panel::resize(Rectangle bounds) { m_Bounds = bounds; }
+void Panel::setHeight(int height) 
+{ 
+  m_Bounds.height = height;
+}
+
+void Panel::setXPos(int x) 
+{ 
+  m_Bounds.x = x;
+}
+
+void Panel::setYPos(int y) 
+{ 
+  m_Bounds.y = y; 
+}
+
+// Main methods
+// ----------------------------------------------
+
+void Panel::resize(Rectangle bounds) 
+{ 
+  m_Bounds = bounds; 
+}
 
 void Panel::updateAndRender()
 {

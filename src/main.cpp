@@ -60,27 +60,27 @@ int main(void)
     0.2f,
     false,
     TEXT_ALIGNMENT_LEFT,
-    40,
+    20,
     2
   };
 
   int b_ExitWidth  = windowWidth/20;
   int b_ExitHeight = windowHeight/20;
-  Button b_Exit({ static_cast<float>(windowWidth)-b_ExitWidth, 0, static_cast<float>(b_ExitWidth), static_cast<float>(b_ExitHeight) }, bs_Exit);
+  Button* b_Exit = new Button({ static_cast<float>(windowWidth)-b_ExitWidth, 0, static_cast<float>(b_ExitWidth), static_cast<float>(b_ExitHeight) }, bs_Exit);
 
   int ib_InputWidth  = windowWidth/3;
   int ib_InputHeight = windowHeight/15;
-  InputBox ib_Input({ static_cast<float>(windowWidth>>1)-(ib_InputWidth>>1), static_cast<float>(windowHeight)/10,
+  InputBox* ib_Input = new InputBox({ static_cast<float>(windowWidth>>1)-(ib_InputWidth>>1), static_cast<float>(windowHeight)/10,
     static_cast<float>(ib_InputWidth), static_cast<float>(ib_InputHeight )}, ibs_Input);
              
   int b_SubmitWidth  = windowWidth/5;
   int b_SubmitHeight = windowHeight/15;
-  Button b_Submit({ static_cast<float>(windowWidth>>1)+(ib_InputWidth>>1)+OFFSET_TEXT, static_cast<float>(windowHeight)/10,
+  Button* b_Submit = new Button({ static_cast<float>(windowWidth>>1)+(ib_InputWidth>>1)+OFFSET_TEXT, static_cast<float>(windowHeight)/10,
     static_cast<float>(b_SubmitWidth), static_cast<float>(b_SubmitHeight) }, bs_Submit);
 
   int tb_OutputWidth  = windowWidth>>1;
   int tb_OutputHeight = windowHeight>>1;
-  TextBox tb_Output({ static_cast<float>(windowWidth>>1)-(tb_OutputWidth>>1), static_cast<float>(windowHeight>>1)-(tb_OutputHeight>>1),
+  TextBox* tb_Output = new TextBox({ static_cast<float>(windowWidth>>1)-(tb_OutputWidth>>1), static_cast<float>(windowHeight>>1)-(tb_OutputHeight>>1),
     static_cast<float>(tb_OutputWidth), static_cast<float>(tb_OutputHeight) }, tbs_Output);
 
   SetConfigFlags(FLAG_WINDOW_RESIZABLE);
@@ -99,39 +99,44 @@ int main(void)
 
     b_ExitWidth  = windowWidth/20;
     b_ExitHeight = windowHeight/20;
-    b_Exit.resize({ static_cast<float>(windowWidth)-b_ExitWidth, 0, static_cast<float>(b_ExitWidth), static_cast<float>(b_ExitHeight) });
+    b_Exit->resize({ static_cast<float>(windowWidth)-b_ExitWidth, 0, static_cast<float>(b_ExitWidth), static_cast<float>(b_ExitHeight) });
 
     ib_InputWidth  = windowWidth/3;
     ib_InputHeight = windowHeight/15;
-    ib_Input.resize({ static_cast<float>(windowWidth>>1)-(ib_InputWidth>>1), static_cast<float>(windowHeight)/10, static_cast<float>(ib_InputWidth),
+    ib_Input->resize({ static_cast<float>(windowWidth>>1)-(ib_InputWidth>>1), static_cast<float>(windowHeight)/10, static_cast<float>(ib_InputWidth),
       static_cast<float>(ib_InputHeight )});
 
     b_SubmitWidth  = windowHeight/5;
     b_SubmitHeight = windowHeight/15;
-    b_Submit.resize({ static_cast<float>(windowWidth>>1)+(ib_InputWidth>>1)+OFFSET_TEXT, static_cast<float>(windowHeight)/10,
+    b_Submit->resize({ static_cast<float>(windowWidth>>1)+(ib_InputWidth>>1)+OFFSET_TEXT, static_cast<float>(windowHeight)/10,
       static_cast<float>(b_SubmitWidth), static_cast<float>(b_SubmitHeight) });
 
     tb_OutputWidth  = windowWidth>>1;
     tb_OutputHeight = windowHeight>>1;
-    tb_Output.resize({ static_cast<float>(windowWidth>>1)-(tb_OutputWidth>>1), static_cast<float>(windowHeight>>1)-(tb_OutputHeight>>1),
+    tb_Output->resize({ static_cast<float>(windowWidth>>1)-(tb_OutputWidth>>1), static_cast<float>(windowHeight>>1)-(tb_OutputHeight>>1),
       static_cast<float>(tb_OutputWidth), static_cast<float>(tb_OutputHeight) });
 
-    ib_Input.updateAndRender();
+    ib_Input->updateAndRender();
 
-    tb_Output.updateAndRender();
+    tb_Output->updateAndRender();
 
-    if (b_Submit.updateAndRender())
+    if (b_Submit->updateAndRender())
     {
-      std::string text = ib_Input.getInput();
+      std::string text = ib_Input->getInput();
       if (text.length())
-        tb_Output.setText(text[text.length()-1]);
+        tb_Output->setText(text[text.length()-1]);
     }
 
-    if (b_Exit.updateAndRender()) 
+    if (b_Exit->updateAndRender()) 
       break;
 
     EndDrawing();
   }
+
+  delete b_Exit;
+  delete b_Submit;
+  delete ib_Input;
+  delete tb_Output;
 
   CloseWindow();
 }

@@ -51,6 +51,7 @@ private:
 	Rectangle     m_Bounds;
 	InputBoxStyle m_Style;
   std::string   m_Text;
+  std::string   m_DisplayText;
   int           m_CursorPosition;
   int           m_CursorOffset;
 
