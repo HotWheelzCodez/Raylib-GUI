@@ -1,14 +1,33 @@
 # Raylib-GUI
-This is a simple to use and very customizable immediate GUI using [Raylib](https://github.com/raysan5/raylib) 
-in C++ with the intent to resemble a CSS style of coding when creating different styles for different components. 
-While there are other options primarly raygui I wanted to make something more modern looking as far as UI, 
-this project was started because I wanted a 'cleaner' (in my opinion) GUI.
 
-This project does require the use of CMake to build and compile, this does not build into a library, it just
-compiles right along with your project. If you are on Windows; run the 'run.bat' file, if you are on Unix 
-machine; then run the 'run.sh'. Both of these files will fetch raylib, build raylib and your project (and the gui),
-then link raylib and, then run the project. The CMakeLists.txt file was not fully mine, but obtained from: [Sas Luca](https://github.com/SasLuca),
-I have modified the file to work with C++ and the project directory, this is the [original](https://github.com/SasLuca/raylib-cmake-template) file / project.
+Raylib-GUI is an immediate GUI library for C++, built on top of [Raylib](https://github.com/raysan5/raylib). It aims to provide a simple-to-use and highly customizable GUI solution, resembling a CSS style of coding for creating various styles for different components.
 
-You do not have to give any credit to this project, however please do not right it off as your own, any one is more than welcome to contribute to this project.
-I hope someone else is looking for a GUI project like this and will find use in it.
+## Why Raylib-GUI?
+
+While there are existing options like raygui, Raylib-GUI distinguishes itself by offering a more modern and clean user interface design. It is designed to facilitate the development of visually appealing GUIs with ease.
+
+## Getting Started
+
+Raylib-GUI requires the use of CMake for building and compiling. The project does not build into a separate library but compiles directly alongside your project.
+
+### Building and Running
+
+1. If you are on a Windows machine, run `run.bat`. 
+2. If you are on a Unix-based system, execute `run.sh`.
+
+    **Note:** Before executing `run.sh`, ensure that it has executable permissions. If not, you may need to run `chmod +x run.sh` in your terminal. If `chmod +x` doesn't work, you can create the executable file manually from the text inside `run.sh`.
+
+These scripts will automatically fetch Raylib, build it along with your project (including the GUI), link Raylib, and then run your project.
+
+
+## Acknowledgements
+
+The `CMakeLists.txt` file used in this project was originally obtained from [Sas Luca](https://github.com/SasLuca) and has been modified to suit the requirements of this project. You can find the original file/project [here](https://github.com/SasLuca/raylib-cmake-template).
+
+## Contributing
+
+Contributions to Raylib-GUI are highly encouraged. Whether it's bug fixes, new features, or improvements, everyone is welcome to contribute to this project.
+
+## License
+
+Raylib-GUI is open-source software - please just don't write it off as your own project.
